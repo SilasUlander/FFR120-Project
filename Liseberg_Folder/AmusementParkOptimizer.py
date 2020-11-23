@@ -29,22 +29,21 @@ class Agent():
 pointNumber=5
 mapSize=200
 
+objects=[]
+positions={}
 
-
-positions=[]
-
-positions=Agent().maps(mapSize)
-
-print(positions[0])
-
+objects=Agent(pointNumber,mapSize)
 
 for i in range(pointNumber):
-  objects.maps(mapSize)
-  print(objects)
+  positions[i]=objects.maps()
+
+
+
+
 
 
 fig = plt.figure(figsize=(16,8))
-ax1 = fig.add_subplot(11)
+ax1 = fig.add_subplot(111)
 ax1.set_ylim(0, mapSize) 
 ax1.set_xlim(0, mapSize) 
 colors = ['red','brown','orange','yellow','blue'] #5 attractions
@@ -65,6 +64,10 @@ ax1.scatter(0,0, c='black')
     
 
 fig.canvas.draw()
+ax1.set_xlabel('x')
+ax1.set_ylabel('y')
+ax1.set_title('map')
+ax1.legend() 
 ax1.set_xlabel('x')
 ax1.set_ylabel('y')
 ax1.set_title('map')
