@@ -8,33 +8,49 @@ from itertools import combinations
 
 
 ##########################################################
-class Agent:
-    def __init__(self, pointNumber, mapSize):
-        self.pointNumber = pointNumber
-        self.mapSize = mapSize
+class Agent():      
 
-    def agents(self):  # speed and parameter
-        self.speed = [round(random.uniform(0, 3), 2)]  # speed between 0 and 3 with 2 decimal
-        self.agent = [round(random.uniform(1, 3), 1)]  # define a parameter that agent will be satified
-        return self.speed, self.agent
+  def __init__(self, pointNumber, mapSize):
+        self.pointNumber=pointNumber
+        self.mapSize=mapSize
 
-    def maps(self):
-        self.x = [round(random.uniform(0, self.mapSize), 2)]
-        self.y = [round(random.uniform(0, self.mapSize), 2)]
-        return self.x, self.y
+  def agents(self):   #speed and parameter
+      self.speed=[round(random.uniform(0,3),2)] #speed between 0 and 3 with 2 decimal
+      self.agent=[round(random.uniform(1,3),1)] #define a parameter that agent will be satified
+      return self.speed, self.agent
+ 
+  def maps(self):
+      self.x=[round(random.uniform(0,self.mapSize),2)]
+      self.y=[round(random.uniform(0,self.mapSize),2)]
+      return self.x, self.y
+
+  def entrance(self):
+      self.x=[0]
+      self.y=[0]
+      return self.x, self.y
 
 
 #####################################################
-pointNumber = 5
-mapSize = 200
+pointNumber=5
+mapSize=200
 
-objects = []
-positions = {}
+objects=[]
+positions={}
+distance={}
+minTwo={}
+obviousPoint={}
 
-objects = Agent(pointNumber, mapSize)
+objects=Agent(pointNumber,mapSize)
 
 for i in range(pointNumber):
-    positions[i] = objects.maps()
+  positions[i]=objects.maps()
+positions[pointNumber]=objects.entrance()
+print(positions)
+
+for p in range(pointNumber+1): #calculate the distance of two points and put in list as distance[point][min1][min2]
+ print(1)
+
+
 
 fig = plt.figure(figsize=(16, 8))
 ax1 = fig.add_subplot(111)
@@ -49,8 +65,8 @@ for p in range(pointNumber):
     ax1.plot(positions[p][0], positions[p][1], c=colors[p], label=f'attractions={attractions[p]}')
 
 
-print('hej')
-#ax1.plot(0, 0, c='black', label=f'entry/exit')  # entry/exit
+
+ax1.plot(0, 0, c='black', label=f'entry/exit')  # entry/exit
 
 ax1.scatter(0, 0, c='black')
 
