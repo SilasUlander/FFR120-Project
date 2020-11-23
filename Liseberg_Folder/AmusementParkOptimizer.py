@@ -70,9 +70,8 @@ for i in range(pointNumber+1):
     minTwo[i,1]=reshape[2]
     #print(reshape)
   
-#print(minTwo)
-
-
+print(minTwo,positions)
+print(positions[1,0],positions[int(minTwo[1,0]),0])
 
 
 
@@ -88,12 +87,14 @@ plt.ion()  # make code continue
 for p in range(pointNumber):
     ax1.scatter(positions[p][0], positions[p][1], c=colors[p])
     ax1.plot(positions[p][0], positions[p][1], c=colors[p], label=f'attractions={attractions[p]}')
-
-
-
+    
 ax1.plot(0, 0, c='black', label=f'entry/exit')  # entry/exit
-
 ax1.scatter(0, 0, c='black')
+
+for p in range(pointNumber+1):
+  
+    plt.plot([positions[p,0],positions[int(minTwo[p,0]),0]],[positions[p,1],positions[int(minTwo[p,0]),1]])
+    plt.plot([positions[p,0],positions[int(minTwo[p,1]),0]],[positions[p,1],positions[int(minTwo[p,1]),1]])
 
 fig.canvas.draw()
 ax1.set_xlabel('x')
