@@ -37,15 +37,10 @@ objects=Agent(pointNumber,mapSize)
 for i in range(pointNumber):
   positions[i]=objects.maps()
 
-
-
-
-
-
 fig = plt.figure(figsize=(16,8))
 ax1 = fig.add_subplot(111)
-ax1.set_ylim(0, mapSize) 
-ax1.set_xlim(0, mapSize) 
+ax1.set_ylim(0-10, mapSize+10) 
+ax1.set_xlim(0-10, mapSize+10) 
 colors = ['red','brown','orange','yellow','blue'] #5 attractions
 attractions=['little red','little brown','little orange','little yellow','little blue']
 plt.ion() #make code continue
@@ -53,10 +48,9 @@ fig.show()
 
 
 for p in range(pointNumber):
-        
-    ax1.plot(x[p],y[p], c=colors[p], label=f'attractions={attractions[p]}')
-         
-    ax1.scatter(x[p],y[p], c=colors[p])
+
+    ax1.scatter(positions[p][0],positions[p][1], c=colors[p])
+    ax1.plot(positions[p][0],positions[p][1], c=colors[p], label=f'attractions={attractions[p]}')
 
 ax1.plot(0,0, c='black', label=f'entry/exit') #entry/exit
          
@@ -64,10 +58,6 @@ ax1.scatter(0,0, c='black')
     
 
 fig.canvas.draw()
-ax1.set_xlabel('x')
-ax1.set_ylabel('y')
-ax1.set_title('map')
-ax1.legend() 
 ax1.set_xlabel('x')
 ax1.set_ylabel('y')
 ax1.set_title('map')
