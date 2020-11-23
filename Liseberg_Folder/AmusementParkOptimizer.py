@@ -34,21 +34,46 @@ class Agent():
 pointNumber=5
 mapSize=200
 
-objects=[]
-positions={}
-distance={}
-minTwo={}
-obviousPoint={}
-
-objects=Agent(pointNumber,mapSize)
+positionsX=[]
+positionsY=[]
+positions = np.zeros(shape=(pointNumber+1,2))
+distance=np.zeros(shape=(pointNumber+1,pointNumber+1))
+minTwo=np.zeros(shape=(pointNumber+1,2))
+obviousPoint=[]
+redistance=np.zeros(shape=(1,pointNumber+1))
 
 for i in range(pointNumber):
-  positions[i]=objects.maps()
-positions[pointNumber]=objects.entrance()
-print(positions)
 
-for p in range(pointNumber+1): #calculate the distance of two points and put in list as distance[point][min1][min2]
- print(1)
+  positionsX.append(round(random.uniform(0,mapSize),2))
+  positionsY.append(round(random.uniform(0,mapSize),2))
+  
+positionsX.append(0)
+positionsY.append(0)
+
+for j in range(pointNumber+1):
+  positions[j,0]=positionsX[j]
+  positions[j,1]=positionsY[j]
+
+
+
+for j in range(pointNumber+1):
+    obviousPoint=positions[j]
+    
+    for k in range(pointNumber+1):
+      distance[j,k]=(positionsX[k]-obviousPoint[0])**2+(positionsY[k]-obviousPoint[1])**2
+
+#print(positions,distance) 
+
+for i in range(pointNumber+1):
+    reshape=np.argsort(distance[i,:])
+    minTwo[i,0]=reshape[1]
+    minTwo[i,1]=reshape[2]
+    #print(reshape)
+  
+#print(minTwo)
+
+
+
 
 
 
@@ -76,3 +101,4 @@ ax1.set_ylabel('y')
 ax1.set_title('map')
 ax1.legend()
 fig.show()
+
