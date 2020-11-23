@@ -9,19 +9,19 @@ from itertools import combinations
 ##########################################################
 class Agent():      
 
+  def __init__(self, pointNumber, mapSize):
+        self.pointNumber=pointNumber
+        self.mapSize=mapSize
+
   def agents(self):   #speed and parameter
       self.speed=[round(random.uniform(0,3),2)] #speed between 0 and 3 with 2 decimal
       self.agent=[round(random.uniform(1,3),1)] #define a parameter that agent will be satified
       return self.speed, self.agent
-
-  def maps(self,mapSize):
-      self.x=[round(random.uniform(0,mapSize),2)]
-      self.y=[round(random.uniform(0,mapSize),2)]
+ 
+  def maps(self):
+      self.x=[round(random.uniform(0,self.mapSize),2)]
+      self.y=[round(random.uniform(0,self.mapSize),2)]
       return self.x, self.y
-
-  def connection(self,pointNumber,mapSize):
-
-      return
   
   
   
