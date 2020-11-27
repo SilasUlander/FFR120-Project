@@ -11,14 +11,19 @@ from Map import Map
 
 #####################################################
 
+
+
 def add_costumer(agent_id):
     start_pos = random.choice(range(5))
     firstTarget = random.choice(attractions)
-    costumer[agentIndex] = Agent(index=agent_id,
-                                  entrances=parkEntrances[start_pos],
-                                  entrancesStr=parkEntrancesStr[start_pos],
-                                 firstTarget=firstTarget,
-                                  mapSize=mapSize)
+
+    costumers[agent_id] = Agent(index=agent_id,
+                                entrances=parkEntrances[start_pos],
+                                entrancesStr=parkEntrancesStr[start_pos],
+                                firstTarget=firstTarget,
+                                mapSize=mapSize)
+    path = Map.get_path_to_next_pos(costumers[agent_id])
+    costumers[agent_id].path = path
 
 
 maxAgents = 20
@@ -43,6 +48,28 @@ attractionEntrances = [[280, 350, 400, 420],
                        [500, 520, 650, 720],
                        [230, 300, 800, 820]]
 
+targets_locations = [np.array(265, 800),
+                     np.array(450, 1000),
+                     np.array(500, 680),
+                     np.array(310, 400),
+                     np.array(150, 0),
+                     np.array(550, 300),
+                     np.array(750, 0),
+                     np.array(0, 700),
+                     np.array(450, 700),
+                     np.array(750, 510),
+                     np.array(450, 510),
+                     np.array(550, 510),
+                     np.array(265, 700),
+                     np.array(450, 350),
+                     np.array(310, 350),
+                     np.array(150, 350),
+                     np.array(800, 510),
+                     np.array(550, 750),
+                     np.array(1000, 750),
+                     np.array(550, 350),
+                     np.array(750, 350)]
+
 ParkMap = Map(mapSize=mapSize,
               parkEntrances=parkEntrances,
               attractionEntrances=attractionEntrances,
@@ -59,19 +86,39 @@ fig, ax = ParkMap.make_map(colors=colors,
 plt.show()
 
 # Main loop
-costumer = {}
-customersList = []
+costumers = {}
+customersInPark = []
 agentIndex = 0
 for t in range(10000):
 
     # Let a new customer enter
-    if len(costumer) < maxAgents and random.random() < probNewCustomer:
+    if len(customersInPark) < maxAgents and random.random() < probNewCustomer:
         add_costumer(agentIndex)
-        customersList.append(agentIndex)
-        costumer.target = random.choice(attractions)
+        customersInPark.append(agentIndex)
 
         agentIndex += 1
 
-    for iCostumer in customersList:
-        if costumer[iCostumer].move:
+    for iCostumer in customersInPark:
+        if costumers[iCostumer].move:
+            curr_pos = costumers[iCostumer].pos
+            sub_target_index = costumers[iCostumer].path[0]
+            sub_target_pos = targets_locations[sub_target_index]
+            r_cs = sub_target_pos - curr_pos
+            r_cs = r_cs/np.linalg.norm(r_cs)
+            move_vec = costumers[iCostumer].speed * r_cs
+            costumers[iCostumer].pos += move_vec
+            # Add new pos to map list over all peeeps pos
+            if np.linalg.norm(costumers[iCostumer].pos-sub_target_pos) < 20:
+                costumers[iCostumer].path.pop(0)
+                if len(costumers[iCostumer].path) == 0:
+                    costumers[iCostumer].move = False  # need to set to true again somehow
+                    if costumers[iCostumer].satisfied:
+                        #find closest exit and leave
+                        customersInPark.remove(costumers[iCostumer].index)
+                    else:
+                        costumers[iCostumer].location = costumers[iCostumer].target
+                        while costumers[iCostumer].location == costumers[iCostumer].target:
+                            costumers[iCostumer].target = random.choice(attractions)
+
+                        costumers[iCostumer].path = Map.get_path_to_next_pos(costumers[iCostumer])
 

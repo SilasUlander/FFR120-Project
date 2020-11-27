@@ -11,14 +11,16 @@ class Agent:
         self.speed = [round(random.uniform(1, 3), 2)]  # speed between 1 and 3 with 2 decimal
         self.mood = [round(random.uniform(1, 3), 1)]  # define a parameter that agent will be satisfied
         self.spawnPosition = entrances  # MIGHT NOT BE NEEDED
+        self.satisfied = False
 
         # Time line
         self.target = firstTarget  # where agent wants to go to
+        self.subTarget = ''
         self.location = entrancesStr  # 0: in the pavement, otherwise id of attraction
-        self.xPos = self.spawnPosition[0]
-        self.yPos = self.spawnPosition[1]
+        self.pos = np.array([self.spawnPosition[0], self.spawnPosition[1]])
         self.move = True  # if true agent moves, if not it means they are in an attraction
         self.distance_moved = 0
+        self.path = []
 
         # Map
         self.mapSize = mapSize

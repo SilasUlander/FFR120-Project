@@ -52,7 +52,7 @@ class Map:
         path = nx.dijkstra_path(self.G, self.locToAdj[current_pos], self.locToAdj[target_pos])
         path_len = nx.dijkstra_path_length(self.G, self.locToAdj[current_pos], self.locToAdj[target_pos])
 
-        return path, path_len
+        return path[1:], path_len
 
     def create_connections(self):
         vec = np.array([
@@ -77,6 +77,7 @@ class Map:
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0,
             0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 0, 0, 3,
             0, 0, 0, 0, 0, 0, 5, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0])
+
 
         mat = vec.reshape((21, 21))
 
