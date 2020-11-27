@@ -42,6 +42,8 @@ class Map:
         ax.imshow(map_matrix, cmap=map_colors, extent=[0, 1000, 0, 1000])
         ax.axes.get_xaxis().set_visible(False)
         ax.axes.get_yaxis().set_visible(False)
+        ax.set_xlim(0, 1000)
+        ax.set_ylim(0, 1000)
         return fig, ax
 
     def get_path_to_next_pos(self, agent):

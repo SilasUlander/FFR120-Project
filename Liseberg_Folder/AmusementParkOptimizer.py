@@ -1,12 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
+import matplotlib
 import math
 import random
 import pylab
 from itertools import combinations
 from Agents import Agent
 from Map import Map
+matplotlib.use('Qt5Agg')
 
 
 ######################## Welcome to the latest main// 2020-12-03 #############################
@@ -143,7 +145,10 @@ ground_color = '#27FF4B'
 fig, ax = ParkMap.make_map(colors=colors,
                            entrance_color=entrance_color,
                            ground_color=ground_color)
-plt.show()
+ax2 = ax.twinx()
+ax2.axes.get_yaxis().set_visible(False)
+plt.ion()
+
 
 # Main loop
 customers = {}
@@ -158,6 +163,11 @@ for t in range(10000):
 
     for iCustomer in customersInPark:
         if customers[iCustomer].move:
+    ax2.cla()
+    ax2.set_ylim(0, 1000)
+    ax2.scatter(Map.agentsLocation[:, 0], Map.agentsLocation[:, 1])
+    plt.show()
+    plt.pause(1e-6)
 
             update_customer_pos(customers[iCustomer])
             sub_target_index = customers[iCustomer].path[0]
