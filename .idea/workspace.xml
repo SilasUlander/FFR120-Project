@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="334a0c4b-8400-4c9c-beb6-87c21e36eadd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/FFR120-Project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/FFR120-Project.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Liseberg_Folder/TEST_program.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Liseberg_Folder/Agents.py" beforeDir="false" afterPath="$PROJECT_DIR$/Liseberg_Folder/Agents.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
