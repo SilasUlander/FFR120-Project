@@ -6,7 +6,7 @@ import random
 import pylab
 from itertools import combinations
 from Agents import Agent
-from Map import make_map
+from Map import Map
 
 #####################################################
 
@@ -28,13 +28,20 @@ attractionCorners = [[[0, 100, 0, 600], [0, 400, 400, 600]],
                      [[800, 1000, 0, 700]],
                      [[500, 700, 600, 1000], [600, 1000, 800, 1000]],
                      [[0, 400, 800, 1000]]]
-attractionEntrances = [[270, 350, 400, 420],
+attractionEntrances = [[280, 350, 400, 420],
                        [500, 600, 280, 300],
                        [800, 820, 470, 550],
                        [500, 520, 650, 720],
                        [230, 300, 800, 820]]
 
-fig, ax = make_map(attractionCorners, attractionEntrances, parkEntrances, colors, entrance_color, ground_color)
+ParkMap = Map(entrances=attractionEntrances, mapSize=mapSize)
+
+fig, ax = ParkMap.make_map(corners=attractionCorners,
+                           entrances=attractionEntrances,
+                           parkEntrances=parkEntrances,
+                           colors=colors,
+                           entrance_color=entrance_color,
+                           ground_color=ground_color)
 plt.show()
 
 # Main loop
@@ -44,7 +51,7 @@ for t in range(100):
     if len(agents) < maxAgents and random.random() < probAgentSpawns:
         # Spawn agent
         agentIndex += 1
-        agents.append(Agent(agentIndex, parkEntrances))
+        agents.append(Agent(agentIndex, parkEntrances, mapSize))
 
 
 # agents = []
