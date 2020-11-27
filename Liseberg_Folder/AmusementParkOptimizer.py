@@ -8,20 +8,29 @@ from itertools import combinations
 from Agents import Agent
 from Map import Map
 
+
 #####################################################
+
+def add_costumer(agent_id):
+    start_pos = random.choice(range(5))
+    firstTarget = random.choice(attractions)
+    costumer[agentIndex] = Agent(index=agent_id,
+                                  entrances=parkEntrances[start_pos],
+                                  entrancesStr=parkEntrancesStr[start_pos],
+                                 firstTarget=firstTarget,
+                                  mapSize=mapSize)
 
 
 maxAgents = 20
 
 # Agent parameters
-probAgentSpawns = 1  # Probability for agent spawning at each timestep
+probNewCustomer = 0.05  # Probability for agent spawning at each timestep
 
 # Map parameters
 mapSize = 1000
 
 parkEntrances = [[0, 700], [150, 0], [750, 0], [1000, 750], [450, 1000]]
 parkEntrancesStr = ['W entrance', 'NW entrance', 'NE entrance', 'E entrance', 'S entrance']
-
 
 attractionCorners = [[[0, 100, 0, 600], [0, 400, 400, 600]],
                      [[200, 700, 0, 300]],
@@ -40,7 +49,7 @@ ParkMap = Map(mapSize=mapSize,
               attractionCorners=attractionCorners)
 
 colors = ['red', 'brown', 'orange', 'yellow', 'blue']
-attractions = ['little red', 'little brown', 'little orange', 'little yellow', 'little blue']
+attractions = ['red', 'brown', 'orange', 'yellow', 'blue']
 entrance_color = 'black'
 ground_color = '#27FF4B'
 
@@ -50,18 +59,19 @@ fig, ax = ParkMap.make_map(colors=colors,
 plt.show()
 
 # Main loop
-agents = []
+costumer = {}
+customersList = []
 agentIndex = 0
-for t in range(100):
-    if len(agents) < maxAgents and random.random() < probAgentSpawns:
-        # Spawn agent
+for t in range(10000):
+
+    # Let a new customer enter
+    if len(costumer) < maxAgents and random.random() < probNewCustomer:
+        add_costumer(agentIndex)
+        customersList.append(agentIndex)
+        costumer.target = random.choice(attractions)
+
         agentIndex += 1
 
-        start_pos = random.choice(range(5))
-        agents.append(Agent(index=agentIndex,
-                            entrances=parkEntrances[start_pos],
-                            entrancesStr=parkEntrancesStr[start_pos],
-                            mapSize=mapSize))
-
-
+    for iCostumer in customersList:
+        if costumer[iCostumer].move:
 

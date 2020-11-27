@@ -4,13 +4,16 @@ import numpy as np
 
 class Agent:
 
-    def __init__(self, index, entrances, entrancesStr, mapSize):
+    def __init__(self, index, entrances, entrancesStr, firstTarget, mapSize):
+
+        # Personal traits
         self.index = index
         self.speed = [round(random.uniform(1, 3), 2)]  # speed between 1 and 3 with 2 decimal
         self.mood = [round(random.uniform(1, 3), 1)]  # define a parameter that agent will be satisfied
-        self.target = None  # where agent wants to go to
-        self.target = None  # where agent wants to go to
         self.spawnPosition = entrances  # MIGHT NOT BE NEEDED
+
+        # Time line
+        self.target = firstTarget  # where agent wants to go to
         self.location = entrancesStr  # 0: in the pavement, otherwise id of attraction
         self.xPos = self.spawnPosition[0]
         self.yPos = self.spawnPosition[1]
