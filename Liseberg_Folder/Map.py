@@ -1,3 +1,4 @@
+import networkx as nx
 import numpy as np
 import matplotlib.pylab as plt
 import matplotlib
@@ -11,6 +12,8 @@ class Map:
         self.attractionEntrances = attractionEntrances
         self.parkEntrances = parkEntrances
         self.attractionCorners = attractionCorners
+
+        self.locToAdj, self.G = self.create_connections()
 
         # Agents location
         self.agentsLocation = []
@@ -33,12 +36,61 @@ class Map:
         for iCoords in self.parkEntrances:
             entrance_x = iCoords[0]
             entrance_y = iCoords[1]
-            map_matrix[max(0, entrance_y-20):entrance_y+20, max(0, entrance_x-20):entrance_x+20] = -1
-        map_colors = matplotlib.colors.ListedColormap([entrance_color, ground_color] + colors[:len(self.attractionCorners)])
+            map_matrix[max(0, entrance_y - 20):entrance_y + 20, max(0, entrance_x - 20):entrance_x + 20] = -1
+        map_colors = matplotlib.colors.ListedColormap(
+            [entrance_color, ground_color] + colors[:len(self.attractionCorners)])
         ax.imshow(map_matrix, cmap=map_colors, extent=[0, 1000, 0, 1000])
         ax.axes.get_xaxis().set_visible(False)
         ax.axes.get_yaxis().set_visible(False)
         return fig, ax
 
+    def get_path_to_next_pos(self, agent):
 
+        current_pos = agent.location
+        target_pos = agent.target
 
+        path = nx.dijkstra_path(self.G, self.locToAdj[current_pos], self.locToAdj[target_pos])
+        path_len = nx.dijkstra_path_length(self.G, self.locToAdj[current_pos], self.locToAdj[target_pos])
+
+        return path, path_len
+
+    def create_connections(self):
+        vec = np.array([
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 5, 2, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 2, 6, 0, 0, 5,
+            0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 3, 0, 5, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0,
+            2, 0, 0, 0, 0, 0, 0, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 4, 0, 0, 0, 0, 3, 0,
+            0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 4, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0,
+            0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 0, 0, 3,
+            0, 0, 0, 0, 0, 0, 5, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0])
+
+        mat = vec.reshape((21, 21))
+
+        g = nx.from_numpy_matrix(mat, create_using=nx.Graph())
+
+        adj = {'NW entrance': 4,
+               'NE entrance': 6,
+               'W entrance': 7,
+               'E entrance': 18,
+               'S entrance': 1,
+               'brown': 5,
+               'red': 3,
+               'orange': 16,
+               'yellow': 2,
+               'blue': 0}
+
+        return adj, g
