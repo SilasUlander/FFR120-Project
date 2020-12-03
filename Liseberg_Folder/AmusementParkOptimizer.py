@@ -169,23 +169,23 @@ for t in range(10000):
     plt.show()
     plt.pause(1e-6)
 
-            update_customer_pos(customers[iCustomer])
-            sub_target_index = customers[iCustomer].path[0]
-            sub_target_pos = targets_locations[sub_target_index]
+    update_customer_pos(customers[iCustomer])
+    sub_target_index = customers[iCustomer].path[0]
+    sub_target_pos = targets_locations[sub_target_index]
 
-            # Update new pos to map list over all peeeps pos
-            if np.linalg.norm(customers[iCustomer].pos - sub_target_pos) < 50:
-                print('Göttans')
-                customers[iCustomer].path.pop(0)
-                if len(customers[iCustomer].path) == 0:
-                    customers[iCustomer].move = True  # need to set to true again somehow
-                    if customers[iCustomer].satisfied:
-                        #find closest exit and leave
-                        customersInPark.remove(customers[iCustomer].index)
-                    else:
-                        customers[iCustomer].location = customers[iCustomer].target
-                        while customers[iCustomer].location == customers[iCustomer].target:
-                            customers[iCustomer].target = random.choice(attractions)
+    # Update new pos to map list over all peeeps pos
+    if np.linalg.norm(customers[iCustomer].pos - sub_target_pos) < 50:
+        print('Göttans')
+        customers[iCustomer].path.pop(0)
+        if len(customers[iCustomer].path) == 0:
+            customers[iCustomer].move = True  # need to set to true again somehow
+            if customers[iCustomer].satisfied:
+                #find closest exit and leave
+                customersInPark.remove(customers[iCustomer].index)
+            else:
+                customers[iCustomer].location = customers[iCustomer].target
+                while customers[iCustomer].location == customers[iCustomer].target:
+                    customers[iCustomer].target = random.choice(attractions)
 
                         customers[iCustomer].path = ParkMap.get_path_to_next_pos(customers[iCustomer])
 
