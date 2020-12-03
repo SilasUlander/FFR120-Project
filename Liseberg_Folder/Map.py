@@ -16,7 +16,7 @@ class Map:
         self.locToAdj, self.G = self.create_connections()
 
         # Agents location
-        self.agentsLocation = []
+        self.agentsLocation = {}
 
     def make_map(self, colors, entrance_color, ground_color):
         fig, ax = plt.subplots()
@@ -52,7 +52,7 @@ class Map:
         path = nx.dijkstra_path(self.G, self.locToAdj[current_pos], self.locToAdj[target_pos])
         path_len = nx.dijkstra_path_length(self.G, self.locToAdj[current_pos], self.locToAdj[target_pos])
 
-        return path[1:], path_len
+        return path[1:]
 
     def create_connections(self):
         vec = np.array([
