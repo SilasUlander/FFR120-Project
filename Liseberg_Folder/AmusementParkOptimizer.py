@@ -161,31 +161,33 @@ for t in range(10000):
         add_customer(agentIndex)
         agentIndex += 1
 
+    if len(ParkMap.agentsLocation.values()) > 0:
+        ax2.cla()
+        ax2.set_ylim(0, 1000)
+        all_coords = np.array(list(ParkMap.agentsLocation.values()))
+        ax2.scatter(all_coords[:, 0], 1000-all_coords[:, 1])
+        plt.show()
+        plt.pause(1e-6)
+
     for iCustomer in customersInPark:
         if customers[iCustomer].move:
-    ax2.cla()
-    ax2.set_ylim(0, 1000)
-    ax2.scatter(Map.agentsLocation[:, 0], Map.agentsLocation[:, 1])
-    plt.show()
-    plt.pause(1e-6)
+            update_customer_pos(customers[iCustomer])
+            ParkMap.agentsLocation[customers[iCustomer].index] = customers[iCustomer].pos
+            sub_target_index = customers[iCustomer].path[0]
+            sub_target_pos = targets_locations[sub_target_index]
 
-    update_customer_pos(customers[iCustomer])
-    sub_target_index = customers[iCustomer].path[0]
-    sub_target_pos = targets_locations[sub_target_index]
+            # Update new pos to map list over all peeeps pos
+            if np.linalg.norm(customers[iCustomer].pos - sub_target_pos) < 50:
+                customers[iCustomer].path.pop(0)
+                if len(customers[iCustomer].path) == 0:
+                    customers[iCustomer].move = True  # need to set to true again somehow
+                    if customers[iCustomer].satisfied:
+                        #find closest exit and leave
+                        customersInPark.remove(customers[iCustomer].index)
+                    else:
+                        customers[iCustomer].location = customers[iCustomer].target
+                        while customers[iCustomer].location == customers[iCustomer].target:
+                            customers[iCustomer].target = random.choice(attractions)
 
-    # Update new pos to map list over all peeeps pos
-    if np.linalg.norm(customers[iCustomer].pos - sub_target_pos) < 50:
-        print('Göttans')
-        customers[iCustomer].path.pop(0)
-        if len(customers[iCustomer].path) == 0:
-            customers[iCustomer].move = True  # need to set to true again somehow
-            if customers[iCustomer].satisfied:
-                #find closest exit and leave
-                customersInPark.remove(customers[iCustomer].index)
-            else:
-                customers[iCustomer].location = customers[iCustomer].target
-                while customers[iCustomer].location == customers[iCustomer].target:
-                    customers[iCustomer].target = random.choice(attractions)
-
-                        customers[iCustomer].path = ParkMap.get_path_to_next_pos(customers[iCustomer])
+                            customers[iCustomer].path = ParkMap.get_path_to_next_pos(customers[iCustomer])
 
