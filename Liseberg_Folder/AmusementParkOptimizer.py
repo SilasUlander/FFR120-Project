@@ -14,8 +14,16 @@ matplotlib.use('Qt5Agg')
 ######################## Welcome to the latest main// 2020-12-03 #############################
 
 
-def check_if_pos_empty(my_belly,next_pos, id):
+def check_if_pos_empty(my_belly, next_pos, id):
     slot_occupied = False
+
+    # try:
+    #     if mapMatrix[int(next_pos[0]), int(next_pos[1])] > 0:
+    #         slot_occupied = True
+    #         return slot_occupied
+    # except:
+    #     pass
+
     for i_s in customersInPark:
         if i_s != id:
             p_2 = customers[i_s]
@@ -36,38 +44,36 @@ def update_customer_pos(customer):
     r_cs = sub_target_pos - curr_pos
     r_cs = r_cs / np.linalg.norm(r_cs)
 
-    next_pos = np.array(np.copy(customer.pos), dtype='float')
-    next_pos += customer.speed*r_cs
+    next_pos = curr_pos + customer.speed * r_cs
 
     slot_occupied = check_if_pos_empty(my_belly=customer.bellyRadius,
                                        next_pos=next_pos,
                                        id=customer.index)
 
     angle = np.pi/6
-    while angle < (np.pi/2*1.01) and slot_occupied:
-        change_vec_r = np.array([np.cos(-2 * angle), np.sin(-2 * angle)])
+    while angle < (3/4*np.pi*1.01) and slot_occupied:
 
+        change_vec_r = np.array([np.cos(-2 * angle), np.sin(-2 * angle)]) + np.random.normal(0, .1, 2)
         right_step = r_cs + change_vec_r
         right_step_vec = right_step / np.linalg.norm(right_step)
-
-        next_pos = customer.speed * right_step_vec
-
+        next_pos = curr_pos + customer.speed * right_step_vec
         slot_occupied = check_if_pos_empty(my_belly=customer.bellyRadius,
                                            next_pos=next_pos,
                                            id=customer.index)
-        if slot_occupied:
+        if not slot_occupied:
             break
 
-        change_vec_l = np.array([np.cos(2 * angle), np.sin(2 * angle)])
-
+        change_vec_l = np.array([np.cos(2 * angle), np.sin(2 * angle)]) + np.random.normal(0, .1, 2)
         left_step = r_cs + change_vec_l
         left_step_vec = left_step / np.linalg.norm(left_step)
-
-        next_pos = customer.speed * left_step_vec
-
+        next_pos = curr_pos + customer.speed * left_step_vec
         slot_occupied = check_if_pos_empty(my_belly=customer.bellyRadius,
                                            next_pos=next_pos,
                                            id=customer.index)
+        if not slot_occupied:
+            break
+
+        angle += np.pi/6
 
     if not slot_occupied:
         customer.pos = np.copy(next_pos)
@@ -75,6 +81,9 @@ def update_customer_pos(customer):
 
 def add_customer(agent_id):
     start_pos = random.choice(range(5))
+    entrance_occupied = check_if_pos_empty(10, parkEntrances[start_pos], 1e6)
+    if entrance_occupied:
+        return None
     firstTarget = random.choice(attractions)
 
     customers[agent_id] = Agent(index=agent_id,
@@ -88,7 +97,7 @@ def add_customer(agent_id):
     ParkMap.agentsLocation[agent_id] = customers[agent_id].pos
 
 
-maxAgents = 20
+maxAgents = 100
 
 # Agent parameters
 probNewCustomer = 0.05  # Probability for agent spawning at each timestep
@@ -127,7 +136,7 @@ targets_locations = [np.array([265, 800]),
                      np.array([310, 350]),
                      np.array([150, 350]),
                      np.array([800, 510]),
-                     np.array([550, 750]),
+                     np.array([750, 750]),
                      np.array([1000, 750]),
                      np.array([550, 350]),
                      np.array([750, 350])]
@@ -142,9 +151,10 @@ attractions = ['red', 'brown', 'orange', 'yellow', 'blue']
 entrance_color = 'black'
 ground_color = '#27FF4B'
 
-fig, ax = ParkMap.make_map(colors=colors,
+fig, ax, mapMatrix = ParkMap.make_map(colors=colors,
                            entrance_color=entrance_color,
                            ground_color=ground_color)
+
 ax2 = ax.twinx()
 ax2.axes.get_yaxis().set_visible(False)
 plt.ion()
@@ -163,9 +173,15 @@ for t in range(10000):
 
     if len(ParkMap.agentsLocation.values()) > 0:
         ax2.cla()
+        ax2.set_xlim(0, 1000)
         ax2.set_ylim(0, 1000)
+        for iCoord in targets_locations:  # Remove later
+            ax2.scatter(iCoord[0], 1000-iCoord[1], c='r')
+        # for iCoord in parkEntrances:  # Remove later
+        #     ax2.scatter(iCoord[0], 1000 - iCoord[1], c='g')
         all_coords = np.array(list(ParkMap.agentsLocation.values()))
         ax2.scatter(all_coords[:, 0], 1000-all_coords[:, 1])
+        ax2.set_title(fr'$t = {t}$')
         plt.show()
         plt.pause(1e-6)
 
@@ -182,7 +198,7 @@ for t in range(10000):
                 if len(customers[iCustomer].path) == 0:
                     customers[iCustomer].move = True  # need to set to true again somehow
                     if customers[iCustomer].satisfied:
-                        #find closest exit and leave
+                        # Find closest exit and leave
                         customersInPark.remove(customers[iCustomer].index)
                     else:
                         customers[iCustomer].location = customers[iCustomer].target

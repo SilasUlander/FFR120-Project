@@ -44,7 +44,8 @@ class Map:
         ax.axes.get_yaxis().set_visible(False)
         ax.set_xlim(0, 1000)
         ax.set_ylim(0, 1000)
-        return fig, ax
+        ax.set_aspect('auto')
+        return fig, ax, map_matrix
 
     def get_path_to_next_pos(self, agent):
 
