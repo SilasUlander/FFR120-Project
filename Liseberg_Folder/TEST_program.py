@@ -7,7 +7,14 @@ import random
 import pylab
 from itertools import combinations
 
+a = np.zeros(1000)
 
+for i in range(1000):
+    a[i] = np.random.normal(loc=25, scale=5)
+
+print(np.median(a))
+
+'''
 vec = np.array([
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -37,7 +44,7 @@ g = nx.from_numpy_matrix(mat, create_using=nx.Graph())
 path = nx.dijkstra_path(g, 0, 5)
 print(path[1:])
 print(path[:])
-'''
+
 
 
 #####################################################
