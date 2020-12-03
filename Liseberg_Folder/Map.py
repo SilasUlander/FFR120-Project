@@ -50,7 +50,7 @@ class Map:
         target_pos = agent.target
 
         path = nx.dijkstra_path(self.G, self.locToAdj[current_pos], self.locToAdj[target_pos])
-        path_len = nx.dijkstra_path_length(self.G, self.locToAdj[current_pos], self.locToAdj[target_pos])
+        #path_len = nx.dijkstra_path_length(self.G, self.locToAdj[current_pos], self.locToAdj[target_pos])
 
         return path[1:]
 

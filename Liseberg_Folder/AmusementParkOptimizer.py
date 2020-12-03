@@ -165,8 +165,9 @@ for t in range(10000):
 
             # Update new pos to map list over all peeeps pos
             if np.linalg.norm(customers[iCustomer].pos - sub_target_pos) < 50:
-                print('Göttans')
+                print(customers[iCustomer].path)
                 customers[iCustomer].path.pop(0)
+                print(customers[iCustomer].path)
                 if len(customers[iCustomer].path) == 0:
                     customers[iCustomer].move = True  # need to set to true again somehow
                     if customers[iCustomer].satisfied:
