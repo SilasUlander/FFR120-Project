@@ -8,6 +8,7 @@ import pylab
 from itertools import combinations
 from Agents import Agent
 from Map import Map
+
 matplotlib.use('Qt5Agg')
 
 
@@ -50,8 +51,8 @@ def update_customer_pos(customer):
                                        next_pos=next_pos,
                                        id=customer.index)
 
-    angle = np.pi/6
-    while angle < (3/4*np.pi*1.01) and slot_occupied:
+    angle = np.pi / 6
+    while angle < (3 / 4 * np.pi * 1.01) and slot_occupied:
 
         change_vec_r = np.array([np.cos(-2 * angle), np.sin(-2 * angle)]) + np.random.normal(0, .1, 2)
         right_step = r_cs + change_vec_r
@@ -73,7 +74,7 @@ def update_customer_pos(customer):
         if not slot_occupied:
             break
 
-        angle += np.pi/6
+        angle += np.pi / 6
 
     if not slot_occupied:
         customer.pos = np.copy(next_pos)
@@ -83,7 +84,7 @@ def add_customer(agent_id):
     start_pos = random.choice(range(5))
     entrance_occupied = check_if_pos_empty(10, parkEntrances[start_pos], 1e6)
     if entrance_occupied:
-        return None
+        return agent_id
     firstTarget = random.choice(attractions)
 
     customers[agent_id] = Agent(index=agent_id,
@@ -95,9 +96,10 @@ def add_customer(agent_id):
     customers[agent_id].path = path
     customersInPark.append(agent_id)
     ParkMap.agentsLocation[agent_id] = customers[agent_id].pos
+    return agent_id + 1
 
 
-maxAgents = 100
+maxAgents = 300
 
 # Agent parameters
 probNewCustomer = 0.05  # Probability for agent spawning at each timestep
@@ -152,13 +154,12 @@ entrance_color = 'black'
 ground_color = '#27FF4B'
 
 fig, ax, mapMatrix = ParkMap.make_map(colors=colors,
-                           entrance_color=entrance_color,
-                           ground_color=ground_color)
+                                      entrance_color=entrance_color,
+                                      ground_color=ground_color)
 
 ax2 = ax.twinx()
 ax2.axes.get_yaxis().set_visible(False)
 plt.ion()
-
 
 # Main loop
 customers = {}
@@ -168,19 +169,18 @@ for t in range(10000):
 
     # Let a new customer enter
     if len(customersInPark) < maxAgents and random.random() < probNewCustomer:
-        add_customer(agentIndex)
-        agentIndex += 1
+        agentIndex = add_customer(agentIndex)
 
     if len(ParkMap.agentsLocation.values()) > 0:
         ax2.cla()
         ax2.set_xlim(0, 1000)
         ax2.set_ylim(0, 1000)
         for iCoord in targets_locations:  # Remove later
-            ax2.scatter(iCoord[0], 1000-iCoord[1], c='r')
+            ax2.scatter(iCoord[0], 1000 - iCoord[1], c='r')
         # for iCoord in parkEntrances:  # Remove later
         #     ax2.scatter(iCoord[0], 1000 - iCoord[1], c='g')
         all_coords = np.array(list(ParkMap.agentsLocation.values()))
-        ax2.scatter(all_coords[:, 0], 1000-all_coords[:, 1])
+        ax2.scatter(all_coords[:, 0], 1000 - all_coords[:, 1])
         ax2.set_title(fr'$t = {t}$')
         plt.show()
         plt.pause(1e-6)
@@ -206,4 +206,3 @@ for t in range(10000):
                             customers[iCustomer].target = random.choice(attractions)
 
                             customers[iCustomer].path = ParkMap.get_path_to_next_pos(customers[iCustomer])
-
