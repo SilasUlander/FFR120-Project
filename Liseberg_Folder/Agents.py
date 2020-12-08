@@ -8,8 +8,8 @@ class Agent:
 
         # Personal traits
         self.index = index
-        self.speed = np.random.uniform(1, 3)*5  # speed between 1 and 3 with 2 decimal
-        self.bellyRadius = max([np.random.normal(loc=20, scale=2)/2, 1])
+        self.speed = np.random.uniform(1, 3)*2  # speed between 1 and 3 with 2 decimal
+        self.bellyRadius = max([np.random.normal(loc=10, scale=2)/2, 1])
         self.mood = [round(random.uniform(1, 3), 1)]  # define a parameter that agent will be satisfied
         self.spawnPosition = entrance  # MIGHT NOT BE NEEDED
         self.satisfied = False

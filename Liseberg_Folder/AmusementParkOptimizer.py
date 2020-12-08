@@ -27,7 +27,7 @@ def check_if_pos_empty(my_belly, next_pos, id):
     #     pass
 
     for i_s in customersInPark:
-        if i_s != id:
+        if i_s != id and not customers[i_s].in_queue and not customers[i_s].in_attraction:
             p_2 = customers[i_s]
             pos_p2 = np.copy(p_2.pos)
             r_pp = next_pos - pos_p2
@@ -100,7 +100,7 @@ def add_customer(agent_id):
     return agent_id + 1
 
 
-maxAgents = 100
+maxAgents = 50
 
 
 # Agent parameters
@@ -157,6 +157,13 @@ colors = ['red', 'brown', 'orange', 'yellow', 'blue']
 #colors = ['black', 'slategray', 'darksalmon', 'tan', 'seagreen', 'olive', 'cadetblue', 'slateblue', 'wheat', 'thistle', 'indigo', 'blue', 'green','red','purple','limegreen']
 attractions = ['red', 'brown', 'orange', 'yellow', 'blue']
 
+attractions_entrances = {'red': np.array([310.0, 400.0]),
+                         'brown': np.array([550.0, 300.0]),
+                         'orange': np.array([800.0, 510.0]),
+                         'yellow': np.array([500.0, 680.0]),
+                         'blue': np.array([265.0, 800.0])}
+
+
 all_attractions = {}
 for i in range(5):
     all_attractions[attractions[i]] = Attraction(duration=100,
@@ -193,6 +200,22 @@ for t in range(10000):
                 all_attractions[attractions[i_attraction]].riding_list.remove(i_rider)
                 customers[i_rider].in_attraction = False
 
+                nxt_pos = np.copy(attractions_entrances[customers[i_rider].location])
+                while True:
+                    print(nxt_pos)
+                    is_empty = check_if_pos_empty(my_belly=customers[i_rider].bellyRadius,
+                                                  next_pos=nxt_pos,
+                                                  id=customers[i_rider].index)
+                    if not is_empty:
+                        break
+                    else:
+                        nxt_pos += np.random.uniform(low=-10, high=10, size=2)
+
+                customers[i_rider].pos = np.copy(nxt_pos)
+                ParkMap.agentsLocation[customers[i_rider].index] = customers[i_rider].pos
+
+
+
     # Let a new customer enter
     if len(customersInPark) < maxAgents and random.random() < probNewCustomer:
         agentIndex = add_customer(agentIndex)
@@ -201,8 +224,8 @@ for t in range(10000):
         ax2.cla()
         ax2.set_xlim(0, 1000)
         ax2.set_ylim(0, 1000)
-        for iCoord in targets_locations:  # Remove later
-            ax2.scatter(iCoord[0], 1000 - iCoord[1], c='r')
+        #for iCoord in targets_locations:  # Remove later
+        #    ax2.scatter(iCoord[0], 1000 - iCoord[1], c='r')
         # for iCoord in parkEntrances:  # Remove later
         #     ax2.scatter(iCoord[0], 1000 - iCoord[1], c='g')
         all_coords = np.array(list(ParkMap.agentsLocation.values()))
@@ -245,3 +268,7 @@ for t in range(10000):
             customers[iCustomer].attraction_time += all_attractions[customers[iCustomer].location].duration
             print(f'Customer {iCustomer}: Time: {customers[iCustomer].attraction_time}')
             customers[iCustomer].in_queue = True
+
+            # Map removal
+            ParkMap.agentsLocation.pop(customers[iCustomer].index)
+
