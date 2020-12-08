@@ -99,10 +99,10 @@ def add_customer(agent_id):
     return agent_id + 1
 
 
-maxAgents = 300
+maxAgents = 30
 
 # Agent parameters
-probNewCustomer = 0.05  # Probability for agent spawning at each timestep
+probNewCustomer = 0.5  # Probability for agent spawning at each timestep
 
 # Map parameters
 mapSize = 1000
