@@ -8,6 +8,7 @@ import pylab
 from itertools import combinations
 from Agents import Agent
 from Map import Map
+from Attraction import Attraction
 
 matplotlib.use('Qt5Agg')
 
@@ -99,7 +100,8 @@ def add_customer(agent_id):
     return agent_id + 1
 
 
-maxAgents = 30
+maxAgents = 100
+
 
 # Agent parameters
 probNewCustomer = 0.5  # Probability for agent spawning at each timestep
@@ -148,8 +150,18 @@ ParkMap = Map(mapSize=mapSize,
               attractionEntrances=attractionEntrances,
               attractionCorners=attractionCorners)
 
+
+
+
 colors = ['red', 'brown', 'orange', 'yellow', 'blue']
+#colors = ['black', 'slategray', 'darksalmon', 'tan', 'seagreen', 'olive', 'cadetblue', 'slateblue', 'wheat', 'thistle', 'indigo', 'blue', 'green','red','purple','limegreen']
 attractions = ['red', 'brown', 'orange', 'yellow', 'blue']
+
+all_attractions = {}
+for i in range(5):
+    all_attractions[attractions[i]] = Attraction(duration=100,
+                                                 price=25)
+
 entrance_color = 'black'
 ground_color = '#27FF4B'
 
@@ -167,6 +179,20 @@ customersInPark = []
 agentIndex = 0
 for t in range(10000):
 
+    for i_attraction in range(5):
+        while len(all_attractions[attractions[i_attraction]].riding_list) <= 8 and len(all_attractions[attractions[i_attraction]].queue_list) > 0:
+            next_to_enter = all_attractions[attractions[i_attraction]].queue_list.pop(0)
+            all_attractions[attractions[i_attraction]].riding_list.append(next_to_enter)
+            customers[next_to_enter].enter_attraction_time = t
+            customers[next_to_enter].in_queue = False
+            customers[next_to_enter].in_attraction = True
+
+        for i_rider in all_attractions[attractions[i_attraction]].riding_list:
+            if t - customers[i_rider].enter_attraction_time > all_attractions[attractions[i_attraction]].duration:
+                customers[i_rider].move = True
+                all_attractions[attractions[i_attraction]].riding_list.remove(i_rider)
+                customers[i_rider].in_attraction = False
+
     # Let a new customer enter
     if len(customersInPark) < maxAgents and random.random() < probNewCustomer:
         agentIndex = add_customer(agentIndex)
@@ -183,7 +209,7 @@ for t in range(10000):
         ax2.scatter(all_coords[:, 0], 1000 - all_coords[:, 1])
         ax2.set_title(fr'$t = {t}$')
         plt.show()
-        plt.pause(1e-6)
+        plt.pause(1e-3)
 
     for iCustomer in customersInPark:
         if customers[iCustomer].move:
@@ -196,13 +222,26 @@ for t in range(10000):
             if np.linalg.norm(customers[iCustomer].pos - sub_target_pos) < 50:
                 customers[iCustomer].path.pop(0)
                 if len(customers[iCustomer].path) == 0:
-                    customers[iCustomer].move = True  # need to set to true again somehow
+                    customers[iCustomer].move = False  # need to set to true again somehow
                     if customers[iCustomer].satisfied:
-                        # Find closest exit and leave
                         customersInPark.remove(customers[iCustomer].index)
                     else:
                         customers[iCustomer].location = customers[iCustomer].target
                         while customers[iCustomer].location == customers[iCustomer].target:
                             customers[iCustomer].target = random.choice(attractions)
 
-                            customers[iCustomer].path = ParkMap.get_path_to_next_pos(customers[iCustomer])
+                        customers[iCustomer].path = ParkMap.get_path_to_next_pos(customers[iCustomer])
+
+        elif customers[iCustomer].in_queue:
+            customers[iCustomer].queue_time += 1
+
+        elif customers[iCustomer].in_attraction:
+            # Riding attraction
+            aaaaaaa = 123
+        else:
+            # Enter attraction
+            all_attractions[customers[iCustomer].location].enter_attraction(customers[iCustomer])
+            customers[iCustomer].enter_queue_time = np.copy(t)
+            customers[iCustomer].attraction_time += all_attractions[customers[iCustomer].location].duration
+            print(f'Customer {iCustomer}: Time: {customers[iCustomer].attraction_time}')
+            customers[iCustomer].in_queue = True

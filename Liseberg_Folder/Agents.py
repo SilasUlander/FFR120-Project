@@ -8,7 +8,7 @@ class Agent:
 
         # Personal traits
         self.index = index
-        self.speed = np.random.uniform(1, 3)  # speed between 1 and 3 with 2 decimal
+        self.speed = np.random.uniform(1, 3)*5  # speed between 1 and 3 with 2 decimal
         self.bellyRadius = max([np.random.normal(loc=20, scale=2)/2, 1])
         self.mood = [round(random.uniform(1, 3), 1)]  # define a parameter that agent will be satisfied
         self.spawnPosition = entrance  # MIGHT NOT BE NEEDED
@@ -22,6 +22,13 @@ class Agent:
         self.move = True  # if true agent moves, if not it means they are in an attraction
         self.distance_moved = 0
         self.path = []
+
+        self.enter_attraction_time = 0
+        self.enter_queue_time = 0
+        self.in_attraction = False
+        self.attraction_time = 0
+        self.in_queue = False
+        self.queue_time = 0
 
         # Map
         self.mapSize = mapSize
