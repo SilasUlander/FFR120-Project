@@ -195,9 +195,9 @@ fireTime = 500
 deadTime = 400
 
 # Agent parameters
-maxAgents = 100
+maxAgents = 300
 belly_mean_size = 10
-probNewCustomer = 0.5  # Probability for agent spawning at each timestep
+probNewCustomer = 1  # Probability for agent spawning at each timestep
 
 # Main loop
 customers = {}
@@ -324,7 +324,7 @@ for t in tqdm(range(10000)):
 
         elif customers[iCustomer].in_attraction:
             # Riding attraction
-            aaaaaaa = 123
+            pass
         else:
             # Enter attraction
             all_attractions[customers[iCustomer].location].enter_attraction(customers[iCustomer])
