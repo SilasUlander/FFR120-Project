@@ -1,3 +1,4 @@
+from tqdm import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
@@ -5,6 +6,7 @@ import matplotlib
 import math
 import random
 import pylab
+import matplotlib.patches as mpatches
 from itertools import combinations
 from Agents import Agent
 from Map import Map
@@ -12,6 +14,65 @@ from Attraction import Attraction
 
 matplotlib.use('Qt5Agg')
 
+# Data
+parkEntrances = np.array([[0, 700],
+                          [150, 0],
+                          [750, 0],
+                          [1000, 750],
+                          [450, 1000]])
+parkEntrancesStr = ['W entrance',
+                    'NW entrance',
+                    'NE entrance',
+                    'E entrance',
+                    'S entrance']
+attractionCorners = [[[0, 100, 0, 600], [0, 400, 400, 600]],
+                     [[200, 700, 0, 300]],
+                     [[800, 1000, 0, 700]],
+                     [[500, 700, 600, 1000], [600, 1000, 800, 1000]],
+                     [[0, 400, 800, 1000]]]
+attractionEntrances = [[280, 350, 400, 420],
+                       [500, 600, 280, 300],
+                       [800, 820, 470, 550],
+                       [500, 520, 650, 720],
+                       [230, 300, 800, 820]]
+targets_locations = [np.array([265, 800]),
+                     np.array([450, 1000]),
+                     np.array([500, 680]),
+                     np.array([310, 400]),
+                     np.array([150, 0]),
+                     np.array([550, 300]),
+                     np.array([750, 0]),
+                     np.array([0, 700]),
+                     np.array([450, 700]),
+                     np.array([750, 510]),
+                     np.array([450, 510]),
+                     np.array([550, 510]),
+                     np.array([265, 700]),
+                     np.array([450, 350]),
+                     np.array([310, 350]),
+                     np.array([150, 350]),
+                     np.array([800, 510]),
+                     np.array([750, 750]),
+                     np.array([1000, 750]),
+                     np.array([550, 350]),
+                     np.array([750, 350])]
+colors = ['red',
+          'brown',
+          'orange',
+          'yellow',
+          'blue']
+attractions = ['red',
+               'brown',
+               'orange',
+               'yellow',
+               'blue']
+attractions_entrances = {'red': np.array([310.0, 400.0]),
+                         'brown': np.array([550.0, 300.0]),
+                         'orange': np.array([800.0, 510.0]),
+                         'yellow': np.array([500.0, 680.0]),
+                         'blue': np.array([265.0, 800.0])}
+entrance_color = 'black'
+ground_color = '#27FF4B'
 
 ######################## Welcome to the latest main// 2020-12-03 #############################
 
@@ -81,7 +142,7 @@ def update_customer_pos(customer):
         customer.pos = np.copy(next_pos)
 
 
-def add_customer(agent_id):
+def add_customer(agent_id, time):
     start_pos = random.choice(range(5))
     entrance_occupied = check_if_pos_empty(10, parkEntrances[start_pos], 1e6)
     if entrance_occupied:
@@ -91,6 +152,7 @@ def add_customer(agent_id):
     customers[agent_id] = Agent(index=agent_id,
                                 entrance=parkEntrances[start_pos],
                                 entrancesStr=parkEntrancesStr[start_pos],
+                                entranceTime=time,
                                 firstTarget=firstTarget,
                                 mapSize=mapSize)
     path = ParkMap.get_path_to_next_pos(customers[agent_id])
@@ -100,78 +162,24 @@ def add_customer(agent_id):
     return agent_id + 1
 
 
-maxAgents = 50
-
-
 # Agent parameters
+maxAgents = 50
 probNewCustomer = 0.5  # Probability for agent spawning at each timestep
 
 # Map parameters
 mapSize = 1000
-
-parkEntrances = np.array([[0, 700], [150, 0], [750, 0], [1000, 750], [450, 1000]])
-parkEntrancesStr = ['W entrance', 'NW entrance', 'NE entrance', 'E entrance', 'S entrance']
-
-attractionCorners = [[[0, 100, 0, 600], [0, 400, 400, 600]],
-                     [[200, 700, 0, 300]],
-                     [[800, 1000, 0, 700]],
-                     [[500, 700, 600, 1000], [600, 1000, 800, 1000]],
-                     [[0, 400, 800, 1000]]]
-attractionEntrances = [[280, 350, 400, 420],
-                       [500, 600, 280, 300],
-                       [800, 820, 470, 550],
-                       [500, 520, 650, 720],
-                       [230, 300, 800, 820]]
-
-targets_locations = [np.array([265, 800]),
-                     np.array([450, 1000]),
-                     np.array([500, 680]),
-                     np.array([310, 400]),
-                     np.array([150, 0]),
-                     np.array([550, 300]),
-                     np.array([750, 0]),
-                     np.array([0, 700]),
-                     np.array([450, 700]),
-                     np.array([750, 510]),
-                     np.array([450, 510]),
-                     np.array([550, 510]),
-                     np.array([265, 700]),
-                     np.array([450, 350]),
-                     np.array([310, 350]),
-                     np.array([150, 350]),
-                     np.array([800, 510]),
-                     np.array([750, 750]),
-                     np.array([1000, 750]),
-                     np.array([550, 350]),
-                     np.array([750, 350])]
-
 ParkMap = Map(mapSize=mapSize,
               parkEntrances=parkEntrances,
               attractionEntrances=attractionEntrances,
               attractionCorners=attractionCorners)
 
-
-
-
-colors = ['red', 'brown', 'orange', 'yellow', 'blue']
-#colors = ['black', 'slategray', 'darksalmon', 'tan', 'seagreen', 'olive', 'cadetblue', 'slateblue', 'wheat', 'thistle', 'indigo', 'blue', 'green','red','purple','limegreen']
-attractions = ['red', 'brown', 'orange', 'yellow', 'blue']
-
-attractions_entrances = {'red': np.array([310.0, 400.0]),
-                         'brown': np.array([550.0, 300.0]),
-                         'orange': np.array([800.0, 510.0]),
-                         'yellow': np.array([500.0, 680.0]),
-                         'blue': np.array([265.0, 800.0])}
-
-
+# Attractions set-up
 all_attractions = {}
 for i in range(5):
     all_attractions[attractions[i]] = Attraction(duration=100,
                                                  price=25)
 
-entrance_color = 'black'
-ground_color = '#27FF4B'
-
+# Map plot
 fig, ax, mapMatrix = ParkMap.make_map(colors=colors,
                                       entrance_color=entrance_color,
                                       ground_color=ground_color)
@@ -184,7 +192,7 @@ plt.ion()
 customers = {}
 customersInPark = []
 agentIndex = 0
-for t in range(10000):
+for t in tqdm(range(1000)):
 
     for i_attraction in range(5):
         while len(all_attractions[attractions[i_attraction]].riding_list) <= 8 and len(all_attractions[attractions[i_attraction]].queue_list) > 0:
@@ -197,12 +205,16 @@ for t in range(10000):
         for i_rider in all_attractions[attractions[i_attraction]].riding_list:
             if t - customers[i_rider].enter_attraction_time > all_attractions[attractions[i_attraction]].duration:
                 customers[i_rider].move = True
+                if np.random.random() < .2:
+                    customers[i_rider].location = customers[i_rider].target
+                    customers[i_rider].target = random.choice(parkEntrancesStr)
+                    customers[i_rider].path = ParkMap.get_path_to_next_pos(customers[i_rider])
+                    customers[i_rider].satisfied = True
                 all_attractions[attractions[i_attraction]].riding_list.remove(i_rider)
                 customers[i_rider].in_attraction = False
 
                 nxt_pos = np.copy(attractions_entrances[customers[i_rider].location])
                 while True:
-                    print(nxt_pos)
                     is_empty = check_if_pos_empty(my_belly=customers[i_rider].bellyRadius,
                                                   next_pos=nxt_pos,
                                                   id=customers[i_rider].index)
@@ -214,11 +226,9 @@ for t in range(10000):
                 customers[i_rider].pos = np.copy(nxt_pos)
                 ParkMap.agentsLocation[customers[i_rider].index] = customers[i_rider].pos
 
-
-
     # Let a new customer enter
     if len(customersInPark) < maxAgents and random.random() < probNewCustomer:
-        agentIndex = add_customer(agentIndex)
+        agentIndex = add_customer(agentIndex, t)
 
     if len(ParkMap.agentsLocation.values()) > 0:
         ax2.cla()
@@ -231,6 +241,20 @@ for t in range(10000):
         all_coords = np.array(list(ParkMap.agentsLocation.values()))
         ax2.scatter(all_coords[:, 0], 1000 - all_coords[:, 1])
         ax2.set_title(fr'$t = {t}$')
+        # ax2.legend(str(t))
+        queueList = [len(all_attractions['red'].riding_list),
+                   len(all_attractions['brown'].riding_list),
+                   len(all_attractions['orange'].riding_list),
+                   len(all_attractions['yellow'].riding_list),
+                   len(all_attractions['blue'].riding_list)]
+        tim_patch= mpatches.Patch(alpha=0, label=f'P: {len(customersInPark)}')
+        red_patch = mpatches.Patch(color='red', label=f'Q: {queueList[0]}')
+        blu_patch = mpatches.Patch(color='blue', label=f'Q: {queueList[4]}')
+        yel_patch = mpatches.Patch(color='yellow', label=f'Q: {queueList[3]}')
+        bro_patch = mpatches.Patch(color='brown', label=f'Q: {queueList[1]}')
+        ora_patch = mpatches.Patch(color='orange', label=f'Q: {queueList[2]}')
+        patch_list = [tim_patch, red_patch, blu_patch, yel_patch, bro_patch, ora_patch]
+        plt.legend(handles=patch_list, bbox_to_anchor=(1.01, 1), loc='upper right')
         plt.show()
         plt.pause(1e-3)
 
@@ -242,12 +266,15 @@ for t in range(10000):
             sub_target_pos = targets_locations[sub_target_index]
 
             # Update new pos to map list over all peeeps pos
-            if np.linalg.norm(customers[iCustomer].pos - sub_target_pos) < 50:
+            if np.linalg.norm(customers[iCustomer].pos - sub_target_pos) < 20:
                 customers[iCustomer].path.pop(0)
                 if len(customers[iCustomer].path) == 0:
-                    customers[iCustomer].move = False  # need to set to true again somehow
+                    customers[iCustomer].move = False
                     if customers[iCustomer].satisfied:
+                        # print(f'EXIT, customer {customers[iCustomer].index}')
                         customersInPark.remove(customers[iCustomer].index)
+                        ParkMap.agentsLocation.pop(customers[iCustomer].index)
+                        customers[iCustomer].leave(time=t)
                     else:
                         customers[iCustomer].location = customers[iCustomer].target
                         while customers[iCustomer].location == customers[iCustomer].target:
@@ -264,11 +291,16 @@ for t in range(10000):
         else:
             # Enter attraction
             all_attractions[customers[iCustomer].location].enter_attraction(customers[iCustomer])
+            all_attractions[customers[iCustomer].location].sell_ticket()
             customers[iCustomer].enter_queue_time = np.copy(t)
             customers[iCustomer].attraction_time += all_attractions[customers[iCustomer].location].duration
-            print(f'Customer {iCustomer}: Time: {customers[iCustomer].attraction_time}')
+            # print(f'Customer {iCustomer}: Time: {customers[iCustomer].attraction_time}')
             customers[iCustomer].in_queue = True
 
             # Map removal
             ParkMap.agentsLocation.pop(customers[iCustomer].index)
 
+# Stats collection
+
+np.save(f'Saved_data/agent_data_A_{maxAgents}.npy', customers)
+np.save(f'Saved_data/attraction_data_A_{maxAgents}.npy', all_attractions)

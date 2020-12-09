@@ -4,7 +4,7 @@ import numpy as np
 
 class Agent:
 
-    def __init__(self, index, entrance, entrancesStr, firstTarget, mapSize):
+    def __init__(self, index, entrance, entrancesStr, entranceTime,firstTarget, mapSize):
 
         # Personal traits
         self.index = index
@@ -15,6 +15,8 @@ class Agent:
         self.satisfied = False
 
         # Time line
+        self.entranceTime = entranceTime
+        self.exitTime = np.nan
         self.target = firstTarget  # where agent wants to go to
         self.subTarget = ''
         self.location = entrancesStr  # 0: in the pavement, otherwise id of attraction
@@ -40,3 +42,5 @@ class Agent:
             target.people += 1
             # we can add a timer here to measure the time it takes for the attraction to fill in different condition
 
+    def leave(self, time):
+        self.exitTime = time

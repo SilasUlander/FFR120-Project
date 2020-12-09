@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="334a0c4b-8400-4c9c-beb6-87c21e36eadd" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/FFR120-Project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/FFR120-Project.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-    </list>
+    <list default="true" id="334a0c4b-8400-4c9c-beb6-87c21e36eadd" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -30,7 +27,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/PycharmProjects/ANN" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -84,6 +81,25 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="ResultAnalysis" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="FFR120-Project" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Liseberg_Folder" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Liseberg_Folder/ResultAnalysis.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="TEST_program" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="FFR120-Project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -131,6 +147,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.AmusementParkOptimizer" />
+        <item itemvalue="Python.ResultAnalysis" />
         <item itemvalue="Python.TEST_program" />
         <item itemvalue="Python.Map" />
       </list>
@@ -151,6 +168,7 @@
       <workItem from="1606315171110" duration="14703000" />
       <workItem from="1606985370904" duration="6655000" />
       <workItem from="1607435635179" duration="14325000" />
+      <workItem from="1607510559845" duration="5601000" />
     </task>
     <servers />
   </component>
@@ -158,59 +176,37 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="999" y="314" key="#AmusementParkOptimizer" timestamp="1606990769458">
+    <state x="874" y="458" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1607521737273">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="999" y="314" key="#AmusementParkOptimizer/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1606990769458" />
-    <state x="999" y="314" width="862" height="771" key="#TEST_program" timestamp="1606988875505">
+    <state x="874" y="458" key="#com.intellij.fileTypes.FileTypeChooser/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607521737273" />
+    <state x="960" y="340" key="FileChooserDialogImpl" timestamp="1607511792458">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="999" y="314" width="862" height="771" key="#TEST_program/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1606988875505" />
-    <state x="549" y="148" key="FileChooserDialogImpl" timestamp="1606994194108">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="549" y="148" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1606994194108" />
-    <state x="915" y="251" key="FileChooserDialogImpl/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1606987892219" />
-    <state width="2499" height="434" key="GridCell.Tab.0.bottom" timestamp="1607452991282">
+    <state x="960" y="340" key="FileChooserDialogImpl/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607511792458" />
+    <state width="2499" height="434" key="GridCell.Tab.0.bottom" timestamp="1607522753219">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="1493" height="189" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1606385951859" />
-    <state width="2517" height="401" key="GridCell.Tab.0.bottom/0.0.2560.1400/-1920.209.1920.1040@0.0.2560.1400" timestamp="1605878609745" />
-    <state width="2499" height="434" key="GridCell.Tab.0.bottom/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607452991282" />
-    <state width="2499" height="434" key="GridCell.Tab.0.center" timestamp="1607452991282">
+    <state width="2499" height="434" key="GridCell.Tab.0.bottom/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607522753219" />
+    <state width="2499" height="434" key="GridCell.Tab.0.center" timestamp="1607522753219">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="1493" height="189" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1606385951859" />
-    <state width="2517" height="401" key="GridCell.Tab.0.center/0.0.2560.1400/-1920.209.1920.1040@0.0.2560.1400" timestamp="1605878609745" />
-    <state width="2499" height="434" key="GridCell.Tab.0.center/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607452991282" />
-    <state width="2499" height="434" key="GridCell.Tab.0.left" timestamp="1607452991282">
+    <state width="2499" height="434" key="GridCell.Tab.0.center/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607522753219" />
+    <state width="2499" height="434" key="GridCell.Tab.0.left" timestamp="1607522753218">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="1493" height="189" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1606385951859" />
-    <state width="2517" height="401" key="GridCell.Tab.0.left/0.0.2560.1400/-1920.209.1920.1040@0.0.2560.1400" timestamp="1605878609744" />
-    <state width="2499" height="434" key="GridCell.Tab.0.left/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607452991282" />
-    <state width="2499" height="434" key="GridCell.Tab.0.right" timestamp="1607452991282">
+    <state width="2499" height="434" key="GridCell.Tab.0.left/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607522753218" />
+    <state width="2499" height="434" key="GridCell.Tab.0.right" timestamp="1607522753219">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="1493" height="189" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1606385951859" />
-    <state width="2517" height="401" key="GridCell.Tab.0.right/0.0.2560.1400/-1920.209.1920.1040@0.0.2560.1400" timestamp="1605878609745" />
-    <state width="2499" height="434" key="GridCell.Tab.0.right/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607452991282" />
-    <state x="284" y="12" key="SettingsEditor" timestamp="1607443444310">
+    <state width="2499" height="434" key="GridCell.Tab.0.right/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607522753219" />
+    <state x="556" y="171" key="SettingsEditor" timestamp="1607510565196">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="142" y="6" key="SettingsEditor/0.0.1280.720@0.0.1280.720" timestamp="1606480028365" />
-    <state x="284" y="12" key="SettingsEditor/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607443444310" />
-    <state x="587" y="322" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1606342589846">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="587" y="322" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1536.824@0.0.1536.824" timestamp="1606342589846" />
-    <state x="943" y="315" width="672" height="678" key="search.everywhere.popup" timestamp="1605878582684">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state x="943" y="315" width="672" height="678" key="search.everywhere.popup/0.0.2560.1400/-1920.209.1920.1040@0.0.2560.1400" timestamp="1605878582684" />
+    <state x="556" y="171" key="SettingsEditor/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607510565196" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/FFR120_Project$Testenv.coverage" NAME="Map Coverage Results" MODIFIED="1606380273576" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Liseberg_Folder" />
-    <SUITE FILE_PATH="coverage/FFR120_Project$AmusementParkOptimizer.coverage" NAME="AmusementParkOptimizer Coverage Results" MODIFIED="1607452991277" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Liseberg_Folder" />
+    <SUITE FILE_PATH="coverage/FFR120_Project$AmusementParkOptimizer.coverage" NAME="AmusementParkOptimizer Coverage Results" MODIFIED="1607522753214" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Liseberg_Folder" />
   </component>
 </project>
