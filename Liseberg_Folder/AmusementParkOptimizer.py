@@ -5,6 +5,7 @@ import matplotlib
 import math
 import random
 import pylab
+import matplotlib.patches as mpatches
 from itertools import combinations
 from Agents import Agent
 from Map import Map
@@ -197,12 +198,16 @@ for t in range(10000):
         for i_rider in all_attractions[attractions[i_attraction]].riding_list:
             if t - customers[i_rider].enter_attraction_time > all_attractions[attractions[i_attraction]].duration:
                 customers[i_rider].move = True
+                if np.random.random() < .2:
+                    customers[i_rider].location = customers[i_rider].target
+                    customers[i_rider].target = random.choice(parkEntrancesStr)
+                    customers[i_rider].path = ParkMap.get_path_to_next_pos(customers[i_rider])
+                    customers[i_rider].satisfied = True
                 all_attractions[attractions[i_attraction]].riding_list.remove(i_rider)
                 customers[i_rider].in_attraction = False
 
                 nxt_pos = np.copy(attractions_entrances[customers[i_rider].location])
                 while True:
-                    print(nxt_pos)
                     is_empty = check_if_pos_empty(my_belly=customers[i_rider].bellyRadius,
                                                   next_pos=nxt_pos,
                                                   id=customers[i_rider].index)
@@ -231,6 +236,20 @@ for t in range(10000):
         all_coords = np.array(list(ParkMap.agentsLocation.values()))
         ax2.scatter(all_coords[:, 0], 1000 - all_coords[:, 1])
         ax2.set_title(fr'$t = {t}$')
+        # ax2.legend(str(t))
+        queueList = [len(all_attractions['red'].riding_list),
+                   len(all_attractions['brown'].riding_list),
+                   len(all_attractions['orange'].riding_list),
+                   len(all_attractions['yellow'].riding_list),
+                   len(all_attractions['blue'].riding_list)]
+        tim_patch= mpatches.Patch(alpha=0, label=f'P: {len(customersInPark)}')
+        red_patch = mpatches.Patch(color='red', label=f'Q: {queueList[0]}')
+        blu_patch = mpatches.Patch(color='blue', label=f'Q: {queueList[4]}')
+        yel_patch = mpatches.Patch(color='yellow', label=f'Q: {queueList[3]}')
+        bro_patch = mpatches.Patch(color='brown', label=f'Q: {queueList[1]}')
+        ora_patch = mpatches.Patch(color='orange', label=f'Q: {queueList[2]}')
+        patch_list = [tim_patch, red_patch, blu_patch, yel_patch, bro_patch, ora_patch]
+        plt.legend(handles=patch_list, bbox_to_anchor=(1.01, 1), loc='upper right')
         plt.show()
         plt.pause(1e-3)
 
@@ -242,12 +261,14 @@ for t in range(10000):
             sub_target_pos = targets_locations[sub_target_index]
 
             # Update new pos to map list over all peeeps pos
-            if np.linalg.norm(customers[iCustomer].pos - sub_target_pos) < 50:
+            if np.linalg.norm(customers[iCustomer].pos - sub_target_pos) < 20:
                 customers[iCustomer].path.pop(0)
                 if len(customers[iCustomer].path) == 0:
-                    customers[iCustomer].move = False  # need to set to true again somehow
+                    customers[iCustomer].move = False
                     if customers[iCustomer].satisfied:
+                        print(f'EXIT, customer {customers[iCustomer].index}')
                         customersInPark.remove(customers[iCustomer].index)
+                        ParkMap.agentsLocation.pop(customers[iCustomer].index)
                     else:
                         customers[iCustomer].location = customers[iCustomer].target
                         while customers[iCustomer].location == customers[iCustomer].target:
