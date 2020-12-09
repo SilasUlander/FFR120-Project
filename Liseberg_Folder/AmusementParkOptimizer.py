@@ -1,3 +1,4 @@
+from tqdm import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
@@ -191,8 +192,8 @@ plt.ion()
 customers = {}
 customersInPark = []
 agentIndex = 0
-for t in range(1000):
-    print(t)
+for t in tqdm(range(10000)):
+
     for i_attraction in range(5):
         while len(all_attractions[attractions[i_attraction]].riding_list) <= 8 and len(all_attractions[attractions[i_attraction]].queue_list) > 0:
             next_to_enter = all_attractions[attractions[i_attraction]].queue_list.pop(0)
@@ -272,7 +273,7 @@ for t in range(1000):
                 if len(customers[iCustomer].path) == 0:
                     customers[iCustomer].move = False
                     if customers[iCustomer].satisfied:
-                        print(f'EXIT, customer {customers[iCustomer].index}')
+                        # print(f'EXIT, customer {customers[iCustomer].index}')
                         customersInPark.remove(customers[iCustomer].index)
                         ParkMap.agentsLocation.pop(customers[iCustomer].index)
                         customers[iCustomer].leave(time=t)
@@ -295,7 +296,7 @@ for t in range(1000):
             all_attractions[customers[iCustomer].location].sell_ticket()
             customers[iCustomer].enter_queue_time = np.copy(t)
             customers[iCustomer].attraction_time += all_attractions[customers[iCustomer].location].duration
-            print(f'Customer {iCustomer}: Time: {customers[iCustomer].attraction_time}')
+            # print(f'Customer {iCustomer}: Time: {customers[iCustomer].attraction_time}')
             customers[iCustomer].in_queue = True
 
             # Map removal
