@@ -192,7 +192,7 @@ plt.ion()
 customers = {}
 customersInPark = []
 agentIndex = 0
-for t in tqdm(range(10000)):
+for t in tqdm(range(1000)):
 
     for i_attraction in range(5):
         while len(all_attractions[attractions[i_attraction]].riding_list) <= 8 and len(all_attractions[attractions[i_attraction]].queue_list) > 0:
@@ -230,7 +230,6 @@ for t in tqdm(range(10000)):
     if len(customersInPark) < maxAgents and random.random() < probNewCustomer:
         agentIndex = add_customer(agentIndex, t)
 
-    '''
     if len(ParkMap.agentsLocation.values()) > 0:
         ax2.cla()
         ax2.set_xlim(0, 1000)
@@ -258,7 +257,6 @@ for t in tqdm(range(10000)):
         plt.legend(handles=patch_list, bbox_to_anchor=(1.01, 1), loc='upper right')
         plt.show()
         plt.pause(1e-3)
-    '''
 
     for iCustomer in customersInPark:
         if customers[iCustomer].move:

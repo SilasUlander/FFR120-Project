@@ -36,7 +36,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.ResultAnalysis">
+  <component name="RunManager" selected="Python.AmusementParkOptimizer">
     <configuration name="AmusementParkOptimizer" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="FFR120-Project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -146,8 +146,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.ResultAnalysis" />
         <item itemvalue="Python.AmusementParkOptimizer" />
+        <item itemvalue="Python.ResultAnalysis" />
         <item itemvalue="Python.TEST_program" />
         <item itemvalue="Python.Map" />
       </list>
@@ -184,22 +184,22 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="960" y="340" key="FileChooserDialogImpl/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607511792458" />
-    <state width="2499" height="434" key="GridCell.Tab.0.bottom" timestamp="1607521734406">
+    <state width="2499" height="434" key="GridCell.Tab.0.bottom" timestamp="1607522753219">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2499" height="434" key="GridCell.Tab.0.bottom/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607521734406" />
-    <state width="2499" height="434" key="GridCell.Tab.0.center" timestamp="1607521734405">
+    <state width="2499" height="434" key="GridCell.Tab.0.bottom/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607522753219" />
+    <state width="2499" height="434" key="GridCell.Tab.0.center" timestamp="1607522753219">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2499" height="434" key="GridCell.Tab.0.center/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607521734405" />
-    <state width="2499" height="434" key="GridCell.Tab.0.left" timestamp="1607521734405">
+    <state width="2499" height="434" key="GridCell.Tab.0.center/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607522753219" />
+    <state width="2499" height="434" key="GridCell.Tab.0.left" timestamp="1607522753218">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2499" height="434" key="GridCell.Tab.0.left/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607521734405" />
-    <state width="2499" height="434" key="GridCell.Tab.0.right" timestamp="1607521734406">
+    <state width="2499" height="434" key="GridCell.Tab.0.left/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607522753218" />
+    <state width="2499" height="434" key="GridCell.Tab.0.right" timestamp="1607522753219">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2499" height="434" key="GridCell.Tab.0.right/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607521734406" />
+    <state width="2499" height="434" key="GridCell.Tab.0.right/0.0.2560.1400/-1920.220.1920.1040@0.0.2560.1400" timestamp="1607522753219" />
     <state x="556" y="171" key="SettingsEditor" timestamp="1607510565196">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -207,6 +207,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/FFR120_Project$Testenv.coverage" NAME="Map Coverage Results" MODIFIED="1606380273576" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Liseberg_Folder" />
-    <SUITE FILE_PATH="coverage/FFR120_Project$AmusementParkOptimizer.coverage" NAME="AmusementParkOptimizer Coverage Results" MODIFIED="1607521346422" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Liseberg_Folder" />
+    <SUITE FILE_PATH="coverage/FFR120_Project$AmusementParkOptimizer.coverage" NAME="AmusementParkOptimizer Coverage Results" MODIFIED="1607522753214" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Liseberg_Folder" />
   </component>
 </project>
