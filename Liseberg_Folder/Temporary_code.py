@@ -78,4 +78,5 @@
         self.x = [0]
         self.y = [0]
         return self.x, self.y
+        #colors = ['black', 'slategray', 'darksalmon', 'tan', 'seagreen', 'olive', 'cadetblue', 'slateblue', 'wheat', 'thistle', 'indigo', 'blue', 'green','red','purple','limegreen']
 '''

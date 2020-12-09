@@ -38,8 +38,8 @@ class Attraction:
         self.queue_list.append(id)
 
 
-
-
+    def sell_ticket(self):
+        self.total_income += self.price
 
 
 
