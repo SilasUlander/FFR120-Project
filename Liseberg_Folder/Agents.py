@@ -4,12 +4,12 @@ import numpy as np
 
 class Agent:
 
-    def __init__(self, index, entrance, entrancesStr, entranceTime,firstTarget, mapSize):
+    def __init__(self, index, entrance, entrancesStr, entranceTime,firstTarget, mapSize, belly):
 
         # Personal traits
         self.index = index
-        self.speed = np.random.uniform(1, 3)*2  # speed between 1 and 3 with 2 decimal
-        self.bellyRadius = max([np.random.normal(loc=10, scale=2)/2, 1])
+        self.speed = np.random.uniform(3, 6)  # speed between 1 and 3 with 2 decimal
+        self.bellyRadius = belly
         self.mood = [round(random.uniform(1, 3), 1)]  # define a parameter that agent will be satisfied
         self.spawnPosition = entrance  # MIGHT NOT BE NEEDED
         self.satisfied = False

@@ -74,6 +74,7 @@ attractions_entrances = {'red': np.array([310.0, 400.0]),
 entrance_color = 'black'
 ground_color = '#27FF4B'
 
+
 ######################## Welcome to the latest main// 2020-12-03 #############################
 
 
@@ -142,9 +143,10 @@ def update_customer_pos(customer):
         customer.pos = np.copy(next_pos)
 
 
-def add_customer(agent_id, time):
+def add_customer(agent_id, time, belly_mean):
     start_pos = random.choice(range(5))
-    entrance_occupied = check_if_pos_empty(10, parkEntrances[start_pos], 1e6)
+    belly_size = max([np.random.normal(loc=belly_mean, scale=2)/2, 1])
+    entrance_occupied = check_if_pos_empty(belly_size, parkEntrances[start_pos], np.nan)
     if entrance_occupied:
         return agent_id
     firstTarget = random.choice(attractions)
@@ -154,7 +156,8 @@ def add_customer(agent_id, time):
                                 entrancesStr=parkEntrancesStr[start_pos],
                                 entranceTime=time,
                                 firstTarget=firstTarget,
-                                mapSize=mapSize)
+                                mapSize=mapSize,
+                                belly=belly_size)
     path = ParkMap.get_path_to_next_pos(customers[agent_id])
     customers[agent_id].path = path
     customersInPark.append(agent_id)
@@ -162,9 +165,7 @@ def add_customer(agent_id, time):
     return agent_id + 1
 
 
-# Agent parameters
-maxAgents = 50
-probNewCustomer = 0.5  # Probability for agent spawning at each timestep
+
 
 # Map parameters
 mapSize = 1000
@@ -188,14 +189,33 @@ ax2 = ax.twinx()
 ax2.axes.get_yaxis().set_visible(False)
 plt.ion()
 
+# Set-up #
+
+fireTime = 500
+deadTime = 400
+
+# Agent parameters
+maxAgents = 100
+belly_mean_size = 10
+probNewCustomer = 0.5  # Probability for agent spawning at each timestep
+
 # Main loop
 customers = {}
 customersInPark = []
 agentIndex = 0
-for t in tqdm(range(1000)):
+emergency = False
+for t in tqdm(range(10000)):
+
+    if t > fireTime:
+        emergency = True
+
+    if t > fireTime + deadTime:
+        print(len(customersInPark))
+        break
 
     for i_attraction in range(5):
-        while len(all_attractions[attractions[i_attraction]].riding_list) <= 8 and len(all_attractions[attractions[i_attraction]].queue_list) > 0:
+        while len(all_attractions[attractions[i_attraction]].riding_list) < 8 and len(
+                all_attractions[attractions[i_attraction]].queue_list) > 0:
             next_to_enter = all_attractions[attractions[i_attraction]].queue_list.pop(0)
             all_attractions[attractions[i_attraction]].riding_list.append(next_to_enter)
             customers[next_to_enter].enter_attraction_time = t
@@ -205,7 +225,7 @@ for t in tqdm(range(1000)):
         for i_rider in all_attractions[attractions[i_attraction]].riding_list:
             if t - customers[i_rider].enter_attraction_time > all_attractions[attractions[i_attraction]].duration:
                 customers[i_rider].move = True
-                if np.random.random() < .2:
+                if np.random.random() < .2 or emergency:
                     customers[i_rider].location = customers[i_rider].target
                     customers[i_rider].target = random.choice(parkEntrancesStr)
                     customers[i_rider].path = ParkMap.get_path_to_next_pos(customers[i_rider])
@@ -227,37 +247,54 @@ for t in tqdm(range(1000)):
                 ParkMap.agentsLocation[customers[i_rider].index] = customers[i_rider].pos
 
     # Let a new customer enter
-    if len(customersInPark) < maxAgents and random.random() < probNewCustomer:
-        agentIndex = add_customer(agentIndex, t)
+    if len(customersInPark) < maxAgents and random.random() < probNewCustomer and not emergency:
+        agentIndex = add_customer(agent_id=agentIndex,
+                                  time=t,
+                                  belly_mean=belly_mean_size)
+    # '''
+    if t % 5 == 0:
 
-    if len(ParkMap.agentsLocation.values()) > 0:
-        ax2.cla()
-        ax2.set_xlim(0, 1000)
-        ax2.set_ylim(0, 1000)
-        #for iCoord in targets_locations:  # Remove later
-        #    ax2.scatter(iCoord[0], 1000 - iCoord[1], c='r')
-        # for iCoord in parkEntrances:  # Remove later
-        #     ax2.scatter(iCoord[0], 1000 - iCoord[1], c='g')
-        all_coords = np.array(list(ParkMap.agentsLocation.values()))
-        ax2.scatter(all_coords[:, 0], 1000 - all_coords[:, 1])
-        ax2.set_title(fr'$t = {t}$')
-        # ax2.legend(str(t))
-        queueList = [len(all_attractions['red'].riding_list),
-                   len(all_attractions['brown'].riding_list),
-                   len(all_attractions['orange'].riding_list),
-                   len(all_attractions['yellow'].riding_list),
-                   len(all_attractions['blue'].riding_list)]
-        tim_patch= mpatches.Patch(alpha=0, label=f'P: {len(customersInPark)}')
-        red_patch = mpatches.Patch(color='red', label=f'Q: {queueList[0]}')
-        blu_patch = mpatches.Patch(color='blue', label=f'Q: {queueList[4]}')
-        yel_patch = mpatches.Patch(color='yellow', label=f'Q: {queueList[3]}')
-        bro_patch = mpatches.Patch(color='brown', label=f'Q: {queueList[1]}')
-        ora_patch = mpatches.Patch(color='orange', label=f'Q: {queueList[2]}')
-        patch_list = [tim_patch, red_patch, blu_patch, yel_patch, bro_patch, ora_patch]
-        plt.legend(handles=patch_list, bbox_to_anchor=(1.01, 1), loc='upper right')
-        plt.show()
-        plt.pause(1e-3)
-
+        if len(ParkMap.agentsLocation.values()) > 0:
+            ax2.cla()
+            ax2.set_xlim(0, 1000)
+            ax2.set_ylim(0, 1000)
+            # for iCoord in targets_locations:  # Remove later
+            #    ax2.scatter(iCoord[0], 1000 - iCoord[1], c='r')
+            # for iCoord in parkEntrances:  # Remove later
+            #     ax2.scatter(iCoord[0], 1000 - iCoord[1], c='g')
+            all_coords = np.array(list(ParkMap.agentsLocation.values()))
+            ax2.scatter(all_coords[:, 0], 1000 - all_coords[:, 1])
+            if not emergency:
+                ax2.set_title(fr'$t = {t}$')
+            else:
+                ax2.set_title(fr'FIRE!!! Time until all of the park on fire: {fireTime + deadTime - t}')
+            # ax2.legend(str(t))
+            queueList = [len(all_attractions['red'].queue_list),
+                         len(all_attractions['brown'].queue_list),
+                         len(all_attractions['orange'].queue_list),
+                         len(all_attractions['yellow'].queue_list),
+                         len(all_attractions['blue'].queue_list)]
+            ridingList = [len(all_attractions['red'].riding_list),
+                          len(all_attractions['brown'].riding_list),
+                          len(all_attractions['orange'].riding_list),
+                          len(all_attractions['yellow'].riding_list),
+                          len(all_attractions['blue'].riding_list)]
+            patch_list = [
+                mpatches.Patch(alpha=0, label=f'Ppl: {len(customersInPark)}'),
+                mpatches.Patch(color='red', label=f'Queue: {queueList[0]}'),
+                mpatches.Patch(color='blue', label=f'Queue: {queueList[4]}'),
+                mpatches.Patch(color='yellow', label=f'Queue: {queueList[3]}'),
+                mpatches.Patch(color='brown', label=f'Queue: {queueList[1]}'),
+                mpatches.Patch(color='orange', label=f'Queue: {queueList[2]}'),
+                mpatches.Patch(color='red', label=f'Riding: {ridingList[0]}'),
+                mpatches.Patch(color='blue', label=f'Riding: {ridingList[4]}'),
+                mpatches.Patch(color='yellow', label=f'Riding: {ridingList[3]}'),
+                mpatches.Patch(color='brown', label=f'Riding: {ridingList[1]}'),
+                mpatches.Patch(color='orange', label=f'Riding: {ridingList[2]}')]
+            plt.legend(handles=patch_list, bbox_to_anchor=(1.01, 1), loc='upper right')
+            plt.show()
+            plt.pause(1e-3)
+    # '''
     for iCustomer in customersInPark:
         if customers[iCustomer].move:
             update_customer_pos(customers[iCustomer])
