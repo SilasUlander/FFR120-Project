@@ -1,4 +1,3 @@
-from tqdm import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
@@ -204,7 +203,7 @@ customers = {}
 customersInPark = []
 agentIndex = 0
 emergency = False
-for t in tqdm(range(10000)):
+for t in range(10000):
 
     if t > fireTime:
         emergency = True
