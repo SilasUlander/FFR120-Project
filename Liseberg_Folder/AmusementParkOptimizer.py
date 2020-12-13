@@ -74,7 +74,7 @@ entrance_color = 'black'
 ground_color = '#27FF4B'
 
 
-######################## Welcome to the latest main// 2020-12-03 #############################
+######################## Welcome to the latest main// 2020-12-13 #############################
 
 
 def check_if_pos_empty(my_belly, next_pos, id):
@@ -188,28 +188,36 @@ ax2 = ax.twinx()
 ax2.axes.get_yaxis().set_visible(False)
 plt.ion()
 
-# Set-up #
 
-fireTime = 500
+# Set-up #
+fireTime = 200
 deadTime = 400
+plotFrequency = 5
 
 # Agent parameters
-maxAgents = 300
+maxAgents = 100
 belly_mean_size = 10
-probNewCustomer = 1  # Probability for agent spawning at each timestep
+probNewCustomer = .5
+probBecomingSatisfied = .2
 
 # Main loop
 customers = {}
 customersInPark = []
 agentIndex = 0
+timeForEvacuation = np.nan
 emergency = False
 for t in range(10000):
 
     if t > fireTime:
         emergency = True
 
-    if t > fireTime + deadTime:
-        print(len(customersInPark))
+    if t == fireTime + deadTime:
+        print(f'{len(customersInPark)} died')
+        numDeadCustomers = customersInPark
+
+    if emergency and len(customersInPark) == 0:
+        timeForEvacuation = t - fireTime
+        print(f'Time for evacuation: {timeForEvacuation}')
         break
 
     for i_attraction in range(5):
@@ -224,7 +232,7 @@ for t in range(10000):
         for i_rider in all_attractions[attractions[i_attraction]].riding_list:
             if t - customers[i_rider].enter_attraction_time > all_attractions[attractions[i_attraction]].duration:
                 customers[i_rider].move = True
-                if np.random.random() < .2 or emergency:
+                if np.random.random() < probBecomingSatisfied or emergency:
                     customers[i_rider].location = customers[i_rider].target
                     customers[i_rider].target = random.choice(parkEntrancesStr)
                     customers[i_rider].path = ParkMap.get_path_to_next_pos(customers[i_rider])
@@ -251,7 +259,7 @@ for t in range(10000):
                                   time=t,
                                   belly_mean=belly_mean_size)
     # '''
-    if t % 5 == 0:
+    if t % plotFrequency == 0:
 
         if len(ParkMap.agentsLocation.values()) > 0:
             ax2.cla()
@@ -266,8 +274,8 @@ for t in range(10000):
             if not emergency:
                 ax2.set_title(fr'$t = {t}$')
             else:
-                ax2.set_title(fr'FIRE!!! Time until all of the park on fire: {fireTime + deadTime - t}')
-            # ax2.legend(str(t))
+                ax2.set_title(fr'FIRE!!! Time until all of the park on fire: {fireTime + deadTime - t}', color='red')
+             
             queueList = [len(all_attractions['red'].queue_list),
                          len(all_attractions['brown'].queue_list),
                          len(all_attractions['orange'].queue_list),
