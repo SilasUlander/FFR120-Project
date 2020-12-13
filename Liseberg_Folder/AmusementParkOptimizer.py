@@ -196,19 +196,20 @@ ax2.axes.get_yaxis().set_visible(False)
 plt.ion()
 
 # Set-up #
-fireTime = 500
+fireTime = 2000
 deadTime = 200
 plotFrequency = 20
 plot_bool = False
 
 # Agent parameters
-maxAgents = 100
-belly_mean_size = 0
-probNewCustomer = 1  # Probability for agent spawning at each timestep
+maxAgents = 300
+belly_mean_size = 10
+probNewCustomer = .5
 probBecomingSatisfied = .2
-maxAgentsList = np.arange(start=20,
-                          stop=205,
-                          step=5)
+# maxAgentsList = np.arange(start=50,
+#                           stop=205,
+#                           step=5)
+maxAgentsList = list(np.ones(20)*100)
 
 profit_vs_maxAgents = np.zeros(len(maxAgentsList))
 
@@ -251,7 +252,7 @@ for i_max_agents in range(len(maxAgentsList)):
             print('Fire')
             emergency = True
             for i_agent in customersInPark:
-                customers[i_agent].speed = customers[i_agent].speed * 3
+                customers[i_agent].speed = customers[i_agent].speed * 2
                 customers[i_agent].Move = True
                 try:
                     customers[i_agent].target = random.choice(parkEntrancesStr)
@@ -274,6 +275,7 @@ for i_max_agents in range(len(maxAgentsList)):
         for i_attraction in range(5):
             while len(all_attractions[attractions[i_attraction]].riding_list) < 8 and len(
                     all_attractions[attractions[i_attraction]].queue_list) > 0:
+                all_attractions[attractions[i_attraction]].sell_ticket()
                 next_to_enter = all_attractions[attractions[i_attraction]].queue_list.pop(0)
                 all_attractions[attractions[i_attraction]].riding_list.append(next_to_enter)
                 customers[next_to_enter].enter_attraction_time = t
@@ -387,8 +389,8 @@ for i_max_agents in range(len(maxAgentsList)):
                 # Riding attraction
                 pass
             else:
+                # Enter attraction
                 all_attractions[customers[iCustomer].location].enter_attraction(customers[iCustomer])
-                all_attractions[customers[iCustomer].location].sell_ticket()
                 customers[iCustomer].enter_queue_time = np.copy(t)
                 customers[iCustomer].attraction_time += all_attractions[customers[iCustomer].location].duration
                 # print(f'Customer {iCustomer}: Time: {customers[iCustomer].attraction_time}')
@@ -406,7 +408,7 @@ for i_max_agents in range(len(maxAgentsList)):
     for i in customers:
         agent = customers[i]
         try:
-            frac += agent.attraction_time / (agent.queue_time + agent.attraction_time)
+            frac += agent.attraction_time / (agent.attraction_time + agent.queue_time)
             n_ave += 1
         except ZeroDivisionError:  # Ignore the once who just arrived
             pass
@@ -415,6 +417,9 @@ for i_max_agents in range(len(maxAgentsList)):
         frac = frac / n_ave
     except ZeroDivisionError:
         frac = 1
+
+    print(frac)
+    probNewCustomer = frac
 
     profit = tot_income * frac
     # profit_vs_maxAgents[i_max_agents] = profit
@@ -433,8 +438,9 @@ for i_max_agents in range(len(maxAgentsList)):
         'profit': profit
     }
 
+    mainFolder = '20_days_100_agents'
     folderName = str(datetime.now()).replace(' ', '_').replace(':', '-')[:19]
-    os.mkdir(f'Saved_data\{folderName}')
-    np.save(f'Saved_data/{folderName}/summary', summary)
-    np.save(f'Saved_data/{folderName}/agent_dataA{maxAgents}.npy', customers)
-    np.save(f'Saved_data/{folderName}/attraction_dataA{maxAgents}.npy', all_attractions)
+    os.mkdir(f'{mainFolder}\{folderName}')
+    np.save(f'{mainFolder}/{folderName}/summary', summary)
+    np.save(f'{mainFolder}/{folderName}/agent_dataA{maxAgents}.npy', customers)
+    np.save(f'{mainFolder}/{folderName}/attraction_dataA{maxAgents}.npy', all_attractions)
