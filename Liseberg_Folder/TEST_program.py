@@ -7,13 +7,9 @@ import random
 import pylab
 from itertools import combinations
 
-a = np.zeros(1000)
-
-for i in range(1000):
-    a[i] = np.random.normal(loc=25, scale=5)
-
-print(np.median(a))
-
+a = {1: 'hej',
+     2: 'då'}
+print(a[1]+a[2])
 '''
 vec = np.array([
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,

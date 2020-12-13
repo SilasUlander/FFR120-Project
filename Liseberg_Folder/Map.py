@@ -13,7 +13,7 @@ class Map:
         self.parkEntrances = parkEntrances
         self.attractionCorners = attractionCorners
 
-        self.locToAdj, self.G = self.create_connections()
+        self.locToAdj, self.adjToLoc, self.G = self.create_connections()
 
         # Agents location
         self.agentsLocation = {}
@@ -52,8 +52,16 @@ class Map:
         current_pos = agent.location
         target_pos = agent.target
 
-        path = nx.dijkstra_path(self.G, self.locToAdj[current_pos], self.locToAdj[target_pos])
-        path_len = nx.dijkstra_path_length(self.G, self.locToAdj[current_pos], self.locToAdj[target_pos])
+        if current_pos == target_pos:
+            return [self.locToAdj[target_pos]]
+        try:
+            path = nx.dijkstra_path(self.G, self.locToAdj[current_pos], self.locToAdj[target_pos])
+        except KeyError:
+            print(current_pos)
+            print(target_pos)
+            print(self.locToAdj[current_pos])
+            print(self.locToAdj[target_pos])
+            # path_len = nx.dijkstra_path_length(self.G, self.locToAdj[current_pos], self.locToAdj[target_pos])
 
         return path[1:]
 
@@ -81,20 +89,52 @@ class Map:
             0, 0, 0, 0, 0, 2, 0, 0, 0, 6, 6, 5, 0, 3, 0, 0, 0, 0, 0, 0, 3,
             0, 0, 0, 0, 0, 0, 5, 0, 0, 5, 8, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0])
 
-
         mat = vec.reshape((21, 21))
 
         g = nx.from_numpy_matrix(mat, create_using=nx.Graph())
 
-        adj = {'NW entrance': 4,
-               'NE entrance': 6,
-               'W entrance': 7,
-               'E entrance': 18,
-               'S entrance': 1,
-               'brown': 5,
-               'red': 3,
-               'orange': 16,
-               'yellow': 2,
-               'blue': 0}
+        loc_to_adj = {'NW entrance': 4,
+                      'NE entrance': 6,
+                      'W entrance': 7,
+                      'E entrance': 18,
+                      'S entrance': 1,
+                      'brown': 5,
+                      'red': 3,
+                      'orange': 16,
+                      'yellow': 2,
+                      'blue': 0,
+                      '10': 8,
+                      '8': 9,
+                      '6': 10,
+                      '7': 11,
+                      '9': 12,
+                      '3': 13,
+                      '2': 14,
+                      '1': 15,
+                      '11': 17,
+                      '4': 19,
+                      '5': 20}
 
-        return adj, g
+        adj_to_loc = {4: 'NW entrance',
+                      6: 'NE entrance',
+                      7: 'W entrance',
+                      18: 'E entrance',
+                      1: 'S entrance',
+                      5: 'brown',
+                      3: 'red',
+                      16: 'orange',
+                      2: 'yellow',
+                      0: 'blue',
+                      8: '10',
+                      9: '8',
+                      10: '6',
+                      11: '7',
+                      12: '9',
+                      13: '3',
+                      14: '2',
+                      15: '1',
+                      17: '11',
+                      19: '4',
+                      20: '5'}
+
+        return loc_to_adj, adj_to_loc, g
