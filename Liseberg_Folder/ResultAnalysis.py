@@ -18,7 +18,7 @@ n_ave = 0
 for i in agent_data:
     agent = agent_data[i]
     try:
-        frac += agent.attraction_time/(agent.queue_time + agent.attraction_time)
+        frac += agent.attraction_time/(agent.exitTime - agent.entranceTime)
         n_ave += 1
     except ZeroDivisionError:  # Ignore the once who just arrived
         pass
