@@ -1,3 +1,4 @@
+#from tqdm import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
@@ -164,8 +165,6 @@ def add_customer(agent_id, time, belly_mean):
     return agent_id + 1
 
 
-
-
 # Map parameters
 mapSize = 1000
 ParkMap = Map(mapSize=mapSize,
@@ -194,8 +193,12 @@ fireTime = 500
 deadTime = 400
 
 # Agent parameters
-maxAgents = 300
-belly_mean_size = 10
+maxAgentsList = np.arange(start=100,
+                          stop=8100,
+                          step=100)
+profit_vs_maxAgents = np.zeros(len(maxAgentsList))
+
+belly_mean_size = 0
 probNewCustomer = 1  # Probability for agent spawning at each timestep
 
 # Main loop
@@ -203,140 +206,163 @@ customers = {}
 customersInPark = []
 agentIndex = 0
 emergency = False
-for t in range(10000):
 
-    if t > fireTime:
-        emergency = True
+for i_max_agents in range(len(maxAgentsList)):
+    maxAgents = maxAgentsList[i_max_agents]
+    for t in range(1000):
+        '''
+        if t > fireTime:
+            emergency = True
 
-    if t > fireTime + deadTime:
-        print(len(customersInPark))
-        break
+        if t > fireTime + deadTime:
+            print(len(customersInPark))
+            break
+        '''
+        for i_attraction in range(5):
+            while len(all_attractions[attractions[i_attraction]].riding_list) < 8 and len(
+                    all_attractions[attractions[i_attraction]].queue_list) > 0:
+                next_to_enter = all_attractions[attractions[i_attraction]].queue_list.pop(0)
+                all_attractions[attractions[i_attraction]].riding_list.append(next_to_enter)
+                customers[next_to_enter].enter_attraction_time = t
+                customers[next_to_enter].in_queue = False
+                customers[next_to_enter].in_attraction = True
 
-    for i_attraction in range(5):
-        while len(all_attractions[attractions[i_attraction]].riding_list) < 8 and len(
-                all_attractions[attractions[i_attraction]].queue_list) > 0:
-            next_to_enter = all_attractions[attractions[i_attraction]].queue_list.pop(0)
-            all_attractions[attractions[i_attraction]].riding_list.append(next_to_enter)
-            customers[next_to_enter].enter_attraction_time = t
-            customers[next_to_enter].in_queue = False
-            customers[next_to_enter].in_attraction = True
+            for i_rider in all_attractions[attractions[i_attraction]].riding_list:
+                if t - customers[i_rider].enter_attraction_time > all_attractions[attractions[i_attraction]].duration:
+                    customers[i_rider].move = True
+                    if np.random.random() < .2 or emergency:
+                        customers[i_rider].location = customers[i_rider].target
+                        customers[i_rider].target = random.choice(parkEntrancesStr)
+                        customers[i_rider].path = ParkMap.get_path_to_next_pos(customers[i_rider])
+                        customers[i_rider].satisfied = True
+                    all_attractions[attractions[i_attraction]].riding_list.remove(i_rider)
+                    customers[i_rider].in_attraction = False
 
-        for i_rider in all_attractions[attractions[i_attraction]].riding_list:
-            if t - customers[i_rider].enter_attraction_time > all_attractions[attractions[i_attraction]].duration:
-                customers[i_rider].move = True
-                if np.random.random() < .2 or emergency:
-                    customers[i_rider].location = customers[i_rider].target
-                    customers[i_rider].target = random.choice(parkEntrancesStr)
-                    customers[i_rider].path = ParkMap.get_path_to_next_pos(customers[i_rider])
-                    customers[i_rider].satisfied = True
-                all_attractions[attractions[i_attraction]].riding_list.remove(i_rider)
-                customers[i_rider].in_attraction = False
+                    nxt_pos = np.copy(attractions_entrances[customers[i_rider].location])
+                    while True:
+                        is_empty = check_if_pos_empty(my_belly=customers[i_rider].bellyRadius,
+                                                      next_pos=nxt_pos,
+                                                      id=customers[i_rider].index)
+                        if not is_empty:
+                            break
+                        else:
+                            nxt_pos += np.random.uniform(low=-10, high=10, size=2)
 
-                nxt_pos = np.copy(attractions_entrances[customers[i_rider].location])
-                while True:
-                    is_empty = check_if_pos_empty(my_belly=customers[i_rider].bellyRadius,
-                                                  next_pos=nxt_pos,
-                                                  id=customers[i_rider].index)
-                    if not is_empty:
-                        break
-                    else:
-                        nxt_pos += np.random.uniform(low=-10, high=10, size=2)
+                    customers[i_rider].pos = np.copy(nxt_pos)
+                    ParkMap.agentsLocation[customers[i_rider].index] = customers[i_rider].pos
 
-                customers[i_rider].pos = np.copy(nxt_pos)
-                ParkMap.agentsLocation[customers[i_rider].index] = customers[i_rider].pos
+        # Let a new customer enter
+        if len(customersInPark) < maxAgents and random.random() < probNewCustomer and not emergency:
+            agentIndex = add_customer(agent_id=agentIndex,
+                                      time=t,
+                                      belly_mean=belly_mean_size)
+        '''
+        if t % 1 == 0:
+    
+            if len(ParkMap.agentsLocation.values()) > 0:
+                ax2.cla()
+                ax2.set_xlim(0, 1000)
+                ax2.set_ylim(0, 1000)
+                # for iCoord in targets_locations:  # Remove later
+                #    ax2.scatter(iCoord[0], 1000 - iCoord[1], c='r')
+                # for iCoord in parkEntrances:  # Remove later
+                #     ax2.scatter(iCoord[0], 1000 - iCoord[1], c='g')
+                all_coords = np.array(list(ParkMap.agentsLocation.values()))
+                ax2.scatter(all_coords[:, 0], 1000 - all_coords[:, 1])
+                if not emergency:
+                    ax2.set_title(fr'$t = {t}$')
+                else:
+                    ax2.set_title(fr'FIRE!!! Time until all of the park on fire: {fireTime + deadTime - t}')
+                # ax2.legend(str(t))
+                queueList = [len(all_attractions['red'].queue_list),
+                             len(all_attractions['brown'].queue_list),
+                             len(all_attractions['orange'].queue_list),
+                             len(all_attractions['yellow'].queue_list),
+                             len(all_attractions['blue'].queue_list)]
+                ridingList = [len(all_attractions['red'].riding_list),
+                              len(all_attractions['brown'].riding_list),
+                              len(all_attractions['orange'].riding_list),
+                              len(all_attractions['yellow'].riding_list),
+                              len(all_attractions['blue'].riding_list)]
+                patch_list = [
+                    mpatches.Patch(alpha=0, label=f'Ppl: {len(customersInPark)}'),
+                    mpatches.Patch(color='red', label=f'Queue: {queueList[0]}'),
+                    mpatches.Patch(color='blue', label=f'Queue: {queueList[4]}'),
+                    mpatches.Patch(color='yellow', label=f'Queue: {queueList[3]}'),
+                    mpatches.Patch(color='brown', label=f'Queue: {queueList[1]}'),
+                    mpatches.Patch(color='orange', label=f'Queue: {queueList[2]}'),
+                    mpatches.Patch(color='red', label=f'Riding: {ridingList[0]}'),
+                    mpatches.Patch(color='blue', label=f'Riding: {ridingList[4]}'),
+                    mpatches.Patch(color='yellow', label=f'Riding: {ridingList[3]}'),
+                    mpatches.Patch(color='brown', label=f'Riding: {ridingList[1]}'),
+                    mpatches.Patch(color='orange', label=f'Riding: {ridingList[2]}')]
+                plt.legend(handles=patch_list, bbox_to_anchor=(1.01, 1), loc='upper right')
+                plt.show()
+                plt.pause(1e-3)
+        '''
+        for iCustomer in customersInPark:
+            if customers[iCustomer].move:
+                update_customer_pos(customers[iCustomer])
+                ParkMap.agentsLocation[customers[iCustomer].index] = customers[iCustomer].pos
+                sub_target_index = customers[iCustomer].path[0]
+                sub_target_pos = targets_locations[sub_target_index]
 
-    # Let a new customer enter
-    if len(customersInPark) < maxAgents and random.random() < probNewCustomer and not emergency:
-        agentIndex = add_customer(agent_id=agentIndex,
-                                  time=t,
-                                  belly_mean=belly_mean_size)
-    # '''
-    if t % 5 == 0:
+                # Update new pos to map list over all peeeps pos
+                if np.linalg.norm(customers[iCustomer].pos - sub_target_pos) < 20:
+                    customers[iCustomer].path.pop(0)
+                    if len(customers[iCustomer].path) == 0:
+                        customers[iCustomer].move = False
+                        if customers[iCustomer].satisfied:
+                            # print(f'EXIT, customer {customers[iCustomer].index}')
+                            customersInPark.remove(customers[iCustomer].index)
+                            ParkMap.agentsLocation.pop(customers[iCustomer].index)
+                            customers[iCustomer].leave(time=t)
+                        else:
+                            customers[iCustomer].location = customers[iCustomer].target
+                            while customers[iCustomer].location == customers[iCustomer].target:
+                                customers[iCustomer].target = random.choice(attractions)
 
-        if len(ParkMap.agentsLocation.values()) > 0:
-            ax2.cla()
-            ax2.set_xlim(0, 1000)
-            ax2.set_ylim(0, 1000)
-            # for iCoord in targets_locations:  # Remove later
-            #    ax2.scatter(iCoord[0], 1000 - iCoord[1], c='r')
-            # for iCoord in parkEntrances:  # Remove later
-            #     ax2.scatter(iCoord[0], 1000 - iCoord[1], c='g')
-            all_coords = np.array(list(ParkMap.agentsLocation.values()))
-            ax2.scatter(all_coords[:, 0], 1000 - all_coords[:, 1])
-            if not emergency:
-                ax2.set_title(fr'$t = {t}$')
+                            customers[iCustomer].path = ParkMap.get_path_to_next_pos(customers[iCustomer])
+
+            elif customers[iCustomer].in_queue:
+                customers[iCustomer].queue_time += 1
+
+            elif customers[iCustomer].in_attraction:
+                # Riding attraction
+                pass
             else:
-                ax2.set_title(fr'FIRE!!! Time until all of the park on fire: {fireTime + deadTime - t}')
-            # ax2.legend(str(t))
-            queueList = [len(all_attractions['red'].queue_list),
-                         len(all_attractions['brown'].queue_list),
-                         len(all_attractions['orange'].queue_list),
-                         len(all_attractions['yellow'].queue_list),
-                         len(all_attractions['blue'].queue_list)]
-            ridingList = [len(all_attractions['red'].riding_list),
-                          len(all_attractions['brown'].riding_list),
-                          len(all_attractions['orange'].riding_list),
-                          len(all_attractions['yellow'].riding_list),
-                          len(all_attractions['blue'].riding_list)]
-            patch_list = [
-                mpatches.Patch(alpha=0, label=f'Ppl: {len(customersInPark)}'),
-                mpatches.Patch(color='red', label=f'Queue: {queueList[0]}'),
-                mpatches.Patch(color='blue', label=f'Queue: {queueList[4]}'),
-                mpatches.Patch(color='yellow', label=f'Queue: {queueList[3]}'),
-                mpatches.Patch(color='brown', label=f'Queue: {queueList[1]}'),
-                mpatches.Patch(color='orange', label=f'Queue: {queueList[2]}'),
-                mpatches.Patch(color='red', label=f'Riding: {ridingList[0]}'),
-                mpatches.Patch(color='blue', label=f'Riding: {ridingList[4]}'),
-                mpatches.Patch(color='yellow', label=f'Riding: {ridingList[3]}'),
-                mpatches.Patch(color='brown', label=f'Riding: {ridingList[1]}'),
-                mpatches.Patch(color='orange', label=f'Riding: {ridingList[2]}')]
-            plt.legend(handles=patch_list, bbox_to_anchor=(1.01, 1), loc='upper right')
-            plt.show()
-            plt.pause(1e-3)
-    # '''
-    for iCustomer in customersInPark:
-        if customers[iCustomer].move:
-            update_customer_pos(customers[iCustomer])
-            ParkMap.agentsLocation[customers[iCustomer].index] = customers[iCustomer].pos
-            sub_target_index = customers[iCustomer].path[0]
-            sub_target_pos = targets_locations[sub_target_index]
+                # Enter attraction
+                all_attractions[customers[iCustomer].location].enter_attraction(customers[iCustomer])
+                all_attractions[customers[iCustomer].location].sell_ticket()
+                customers[iCustomer].enter_queue_time = np.copy(t)
+                customers[iCustomer].attraction_time += all_attractions[customers[iCustomer].location].duration
+                # print(f'Customer {iCustomer}: Time: {customers[iCustomer].attraction_time}')
+                customers[iCustomer].in_queue = True
 
-            # Update new pos to map list over all peeeps pos
-            if np.linalg.norm(customers[iCustomer].pos - sub_target_pos) < 20:
-                customers[iCustomer].path.pop(0)
-                if len(customers[iCustomer].path) == 0:
-                    customers[iCustomer].move = False
-                    if customers[iCustomer].satisfied:
-                        # print(f'EXIT, customer {customers[iCustomer].index}')
-                        customersInPark.remove(customers[iCustomer].index)
-                        ParkMap.agentsLocation.pop(customers[iCustomer].index)
-                        customers[iCustomer].leave(time=t)
-                    else:
-                        customers[iCustomer].location = customers[iCustomer].target
-                        while customers[iCustomer].location == customers[iCustomer].target:
-                            customers[iCustomer].target = random.choice(attractions)
+                # Map removal
+                ParkMap.agentsLocation.pop(customers[iCustomer].index)
 
-                        customers[iCustomer].path = ParkMap.get_path_to_next_pos(customers[iCustomer])
+    tot_income = 0
+    for i_attraction in range(5):
+        tot_income += all_attractions[attractions[i_attraction]].total_income
 
-        elif customers[iCustomer].in_queue:
-            customers[iCustomer].queue_time += 1
-
-        elif customers[iCustomer].in_attraction:
-            # Riding attraction
+    frac = 0
+    n_ave = 0
+    for i in customers:
+        agent = customers[i]
+        try:
+            frac += agent.attraction_time / (agent.queue_time + agent.attraction_time)
+            n_ave += 1
+        except ZeroDivisionError:  # Ignore the once who just arrived
             pass
-        else:
-            # Enter attraction
-            all_attractions[customers[iCustomer].location].enter_attraction(customers[iCustomer])
-            all_attractions[customers[iCustomer].location].sell_ticket()
-            customers[iCustomer].enter_queue_time = np.copy(t)
-            customers[iCustomer].attraction_time += all_attractions[customers[iCustomer].location].duration
-            # print(f'Customer {iCustomer}: Time: {customers[iCustomer].attraction_time}')
-            customers[iCustomer].in_queue = True
 
-            # Map removal
-            ParkMap.agentsLocation.pop(customers[iCustomer].index)
+    frac = frac / n_ave
+
+    profit = tot_income * frac
+    profit_vs_maxAgents[i_max_agents] = profit
 
 # Stats collection
+np.save(f'Saved_data/profit_vs_maxAgents.npy', profit_vs_maxAgents)
 
-np.save(f'Saved_data/agent_data_A_{maxAgents}.npy', customers)
-np.save(f'Saved_data/attraction_data_A_{maxAgents}.npy', all_attractions)
+#np.save(f'Saved_data/agent_data_A_{maxAgents}.npy', customers)
+#np.save(f'Saved_data/attraction_data_A_{maxAgents}.npy', all_attractions)
