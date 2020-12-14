@@ -200,19 +200,19 @@ smiley = parse_path("""m 739.01202,391.98936 c 13,26 13,57 9,85 -6,27 -18,52 -35
 smiley.vertices -= smiley.vertices.mean(axis=0)
 
 # Set-up #
-fireTime = 500
+fireTime = 5000
 deadTime = 300
-plotFrequency = 1
+plotFrequency = 100
 plot_bool = True
 
 # Agent parameters
-belly_mean_size = 20
-probNewCustomer = 0
+belly_mean_size = 10
+probNewCustomer = 0.2
 probBecomingSatisfied = .2
 # maxAgentsList = np.arange(start=140,
 #                           stop=220,
 #                           step=20)
-maxAgentsList = [10]
+maxAgentsList = [100]
 
 # profit_vs_maxAgents = np.zeros(len(maxAgentsList))
 
@@ -222,11 +222,15 @@ customersInPark = []
 agentIndex = 0
 timeForEvacuation = np.nan
 
+
+queue_list_over_time = []
+riding_list_over_time = []
+
 for maxAgents in maxAgentsList:
     # mainFolder = f'Saved_data/20_days_{maxAgents}_agents'
     # os.mkdir(mainFolder)
 
-    for _ in range(3):
+    for _ in range(1):
 
         customers = {}
         customersInPark = []
@@ -271,13 +275,19 @@ for maxAgents in maxAgentsList:
             if t == fireTime + deadTime:
                 print(f'{len(customersInPark)} died')
                 numDeadCustomers = customersInPark
+                break
 
             if emergency and len(customersInPark) == 0:
                 timeForEvacuation = t - fireTime
                 print(f'Time for evacuation: {timeForEvacuation}')
                 break
-
+            queue_list = []
+            riding_list = []
             for i_attraction in range(5):
+
+                queue_list.append(len(all_attractions[attractions[i_attraction]].queue_list))
+                riding_list.append(len(all_attractions[attractions[i_attraction]].riding_list))
+
                 while len(all_attractions[attractions[i_attraction]].riding_list) < 8 and len(
                         all_attractions[attractions[i_attraction]].queue_list) > 0:
                     all_attractions[attractions[i_attraction]].sell_ticket()
@@ -309,6 +319,9 @@ for maxAgents in maxAgentsList:
 
                         customers[i_rider].pos = np.copy(nxt_pos)
                         ParkMap.agentsLocation[customers[i_rider].index] = customers[i_rider].pos
+
+            queue_list_over_time.append(queue_list)
+            riding_list_over_time.append(riding_list)
 
             # Let a new customer enter
             if len(customersInPark) < maxAgents and random.random() < probNewCustomer and not emergency:
@@ -360,7 +373,7 @@ for maxAgents in maxAgentsList:
                             mpatches.Patch(color='orange', label=f'Riding: {ridingList[2]}')]
                         plt.legend(handles=patch_list, bbox_to_anchor=(1.01, 1), loc='upper right')
                         plt.show()
-                        plt.pause(1e3)
+                        plt.pause(1e-3)
 
             for iCustomer in customersInPark:
                 if customers[iCustomer].move:
@@ -442,6 +455,11 @@ for maxAgents in maxAgentsList:
             'totalTime': t,
             'profit': profit
         }
+
+        save_q_list = np.array(queue_list_over_time)
+        save_r_list = np.array(riding_list_over_time)
+        np.save(f'Saved_data/queue_vs_time_agents_{maxAgents}.npy', save_q_list)
+        np.save(f'Saved_data/riding_vs_time_agents_{maxAgents}.npy', save_r_list)
 
         # mainFolder = f'20_days_{maxAgents}_agents'
         # subFolder = str(datetime.now()).replace(' ', '_').replace(':', '-')[:19]
