@@ -196,7 +196,7 @@ ax2.axes.get_yaxis().set_visible(False)
 plt.ion()
 
 # Set-up #
-fireTime = 5000
+fireTime = 2000
 deadTime = 300
 plotFrequency = 20
 plot_bool = False
@@ -205,12 +205,11 @@ plot_bool = False
 belly_mean_size = 10
 probNewCustomer = .8
 probBecomingSatisfied = .2
-maxAgentsList = np.arange(start=50,
-                          stop=205,
-                          step=5)
+maxAgentsList = np.arange(start=140,
+                          stop=220,
+                          step=20)
 
-
-profit_vs_maxAgents = np.zeros(len(maxAgentsList))
+# profit_vs_maxAgents = np.zeros(len(maxAgentsList))
 
 # Main loop
 customers = {}
@@ -222,7 +221,7 @@ for maxAgents in maxAgentsList:
     mainFolder = f'Saved_data/20_days_{maxAgents}_agents'
     os.mkdir(mainFolder)
 
-    for _ in range(20):
+    for _ in range(3):
 
         customers = {}
         customersInPark = []
