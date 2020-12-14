@@ -49,14 +49,35 @@ def get_dir_list(start=None, end=None):
 
 dirList = get_dir_list()
 
-for dir in dirList:
-    fileList = os.listdir(f'Saved_data/{dir}')
-    iAgentData = np.load(f'Saved_data/{dir}/{fileList[0]}', allow_pickle=True).item()
-    iAttractionData = np.load(f'Saved_data/{dir}/{fileList[1]}', allow_pickle=True).item()
-    iSummary = np.load(f'Saved_data/{dir}/{fileList[2]}', allow_pickle=True).item()
 
-print(iAgentData[0].attraction_time)
-print(iAgentData[0].entranceTime)
-print(iAgentData[0].exitTime)
-frac = iAgentData[0].attraction_time / (iAgentData[0].exitTime - iAgentData[0].entranceTime)
-print(frac)
+dataDict = {}
+for dir in dirList:
+    if dir[-6:] != 'agents':
+        continue
+    subDirList = os.listdir(f'Saved_data/{dir}')
+    tmp = []
+    for subDir in subDirList:
+        fileList = os.listdir(f'Saved_data/{dir}/{subDir}')
+        iAgentData = np.load(f'Saved_data/{dir}/{subDir}/{fileList[0]}', allow_pickle=True).item()
+        iAttractionData = np.load(f'Saved_data/{dir}/{subDir}/{fileList[1]}', allow_pickle=True).item()
+        iSummary = np.load(f'Saved_data/{dir}/{subDir}/{fileList[2]}', allow_pickle=True).item()
+        tmp.append(iSummary['profit'])
+        fireTime = iSummary['fireTime']
+    dataDict[iSummary['maxAgents']] = np.mean(tmp) / fireTime * 1000
+        # fracDict[]
+        # numAgentsList.append(iSummary['maxAgents'])
+        # fracList.append(iSummary['frac'])
+print(dataDict)
+
+
+sortedProfit = dataDict.items()
+profitList = []
+for i in sortedProfit:
+    subList = [i[0], i[1]]
+    profitList.append(subList)
+
+profitList = np.array(sorted(profitList))
+print(profitList)
+plt.plot(profitList[:, 0], profitList[:, 1], '-o')
+plt.axis([40, 210, 0, 8000])
+plt.show()

@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="64e7a2c3-fac7-41f5-bf9a-4c1665cb1af6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AmusementParkOptimizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/AmusementParkOptimizer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ResultAnalysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/ResultAnalysis.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +43,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.AmusementParkOptimizer">
+  <component name="RunManager" selected="Python.ResultAnalysis">
     <configuration name="AmusementParkOptimizer" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Liseberg_Folder" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -112,8 +112,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.AmusementParkOptimizer" />
         <item itemvalue="Python.ResultAnalysis" />
+        <item itemvalue="Python.AmusementParkOptimizer" />
         <item itemvalue="Python.TEST_program" />
       </list>
     </recent_temporary>
@@ -133,7 +133,7 @@
       <workItem from="1607086215875" duration="3432000" />
       <workItem from="1607505316542" duration="4880000" />
       <workItem from="1607767954295" duration="3031000" />
-      <workItem from="1607853091373" duration="21821000" />
+      <workItem from="1607853091373" duration="25277000" />
     </task>
     <servers />
   </component>
@@ -141,7 +141,7 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/AmusementParkOptimizer_py$ResultAnalysis.coverage" NAME="ResultAnalysis Coverage Results" MODIFIED="1607886688475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AmusementParkOptimizer_py$ResultAnalysis.coverage" NAME="ResultAnalysis Coverage Results" MODIFIED="1607939818017" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AmusementParkOptimizer_py$TEST_program.coverage" NAME="TEST_program Coverage Results" MODIFIED="1607868719801" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AmusementParkOptimizer_py$AmusementParkOptimizer.coverage" NAME="AmusementParkOptimizer Coverage Results" MODIFIED="1607895088209" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Liseberg_Folder$AmusementParkOptimizer.coverage" NAME="AmusementParkOptimizer Coverage Results" MODIFIED="1606496379024" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
