@@ -19,7 +19,7 @@ class Map:
         self.agentsLocation = {}
 
     def make_map(self, colors, entrance_color, ground_color):
-        fig, ax = plt.subplots(figsize=[8, 7])
+        fig, ax = plt.subplots(figsize=[10, 10])
         map_matrix = np.zeros((1000, 1000))
         for i, iCorners in enumerate(self.attractionCorners):
             for jCorners in iCorners:

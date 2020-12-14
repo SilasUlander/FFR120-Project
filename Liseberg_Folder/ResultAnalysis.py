@@ -30,6 +30,7 @@ import os
 #
 # print(profit)
 
+
 def get_dir_list(start=None, end=None):
     dir_list = os.listdir('Saved_data')
     if start:
@@ -50,34 +51,79 @@ def get_dir_list(start=None, end=None):
 dirList = get_dir_list()
 
 
-dataDict = {}
+profitDict = {}
+fracDict = {}
+incomeDict = {}
 for dir in dirList:
     if dir[-6:] != 'agents':
         continue
     subDirList = os.listdir(f'Saved_data/{dir}')
-    tmp = []
+    profit = []
+    income = []
+    fracList = []
     for subDir in subDirList:
         fileList = os.listdir(f'Saved_data/{dir}/{subDir}')
         iAgentData = np.load(f'Saved_data/{dir}/{subDir}/{fileList[0]}', allow_pickle=True).item()
         iAttractionData = np.load(f'Saved_data/{dir}/{subDir}/{fileList[1]}', allow_pickle=True).item()
         iSummary = np.load(f'Saved_data/{dir}/{subDir}/{fileList[2]}', allow_pickle=True).item()
-        tmp.append(iSummary['profit'])
+        profit.append(iSummary['profit'])
         fireTime = iSummary['fireTime']
-    dataDict[iSummary['maxAgents']] = np.mean(tmp) / fireTime * 1000
-        # fracDict[]
-        # numAgentsList.append(iSummary['maxAgents'])
-        # fracList.append(iSummary['frac'])
-print(dataDict)
+
+        attractions = ['red', 'brown', 'orange', 'yellow', 'blue']
+        tot_income = 0
+        for i_attraction in attractions:
+            tot_income += iAttractionData[i_attraction].total_income
+        income.append(tot_income)
+
+        frac = 0
+        n_ave = 0
+        for i in iAgentData:
+            agent = iAgentData[i]
+            try:
+                frac += agent.attraction_time / (agent.attraction_time + agent.queue_time)
+                n_ave += 1
+            except ZeroDivisionError:  # Ignore the ones who just arrived
+                pass
+        try:
+            frac = frac / n_ave
+        except ZeroDivisionError:
+            frac = 1
+        fracList.append(frac)
+
+    profitDict[iSummary['maxAgents']] = np.mean(profit) / fireTime * 1000
+    incomeDict[iSummary['maxAgents']] = np.mean(income) / fireTime * 600
+    fracDict[iSummary['maxAgents']] = np.mean(fracList) * 7100
 
 
-sortedProfit = dataDict.items()
+sortedProfit = profitDict.items()
 profitList = []
 for i in sortedProfit:
     subList = [i[0], i[1]]
     profitList.append(subList)
 
+sortedIncome = incomeDict.items()
+incomeList = []
+for i in sortedIncome:
+    subList = [i[0], i[1]]
+    incomeList.append(subList)
+
+sortedFrac = fracDict.items()
+fracList = []
+for i in sortedFrac:
+    subList = [i[0], i[1]]
+    fracList.append(subList)
+
+
 profitList = np.array(sorted(profitList))
-print(profitList)
-plt.plot(profitList[:, 0], profitList[:, 1], '-o')
-plt.axis([40, 210, 0, 8000])
+fracList = np.array(sorted(fracList))
+incomeList = np.array(sorted(incomeList))
+plt.plot(profitList[:, 0], profitList[:, 1], '-o', label='Profit', zorder=10, color='green')
+plt.plot(incomeList[:, 0], incomeList[:, 1], '--o', markersize=4, label='Income', color='orange')
+plt.plot(fracList[:, 0], fracList[:, 1], '--o', markersize=4, label='Reputation', color='deepskyblue')
+plt.axis([20, 210, 0, 8000])
+plt.legend()
+plt.xlabel('Maximum number of people in park')
+plt.yticks(color='green')
+plt.ylabel('Profit (tkr)', color='green')
+plt.grid()
 plt.show()
