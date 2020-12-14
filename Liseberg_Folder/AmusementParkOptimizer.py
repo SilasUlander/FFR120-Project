@@ -199,7 +199,7 @@ plt.ion()
 fireTime = 5000
 deadTime = 300
 plotFrequency = 20
-plot_bool = True
+plot_bool = False
 
 # Agent parameters
 belly_mean_size = 10
