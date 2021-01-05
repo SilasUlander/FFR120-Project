@@ -90,9 +90,9 @@ for dir in dirList:
             frac = 1
         fracList.append(frac)
 
-    profitDict[iSummary['maxAgents']] = np.mean(profit) / fireTime * 1000
-    incomeDict[iSummary['maxAgents']] = np.mean(income) / fireTime * 600
-    fracDict[iSummary['maxAgents']] = np.mean(fracList) * 7100
+    profitDict[iSummary['maxAgents']] = np.mean(profit) / fireTime * 600
+    incomeDict[iSummary['maxAgents']] = np.mean(income) / fireTime * 700
+    fracDict[iSummary['maxAgents']] = np.mean(fracList) * 7000
 
 
 sortedProfit = profitDict.items()
@@ -117,13 +117,19 @@ for i in sortedFrac:
 profitList = np.array(sorted(profitList))
 fracList = np.array(sorted(fracList))
 incomeList = np.array(sorted(incomeList))
+fig, ax1 = plt.subplots()
 plt.plot(profitList[:, 0], profitList[:, 1], '-o', label='Profit', zorder=10, color='green')
 plt.plot(incomeList[:, 0], incomeList[:, 1], '--o', markersize=4, label='Income', color='orange')
 plt.plot(fracList[:, 0], fracList[:, 1], '--o', markersize=4, label='Reputation', color='deepskyblue')
 plt.axis([20, 210, 0, 8000])
-plt.legend()
-plt.xlabel('Maximum number of people in park')
-plt.yticks(color='green')
-plt.ylabel('Profit (tkr)', color='green')
+plt.legend(prop={'size': 14})
+plt.xlabel('Maximum number of people in park', size=14)
+plt.xticks(size=12)
+plt.yticks(size=12)
+plt.ylabel('Profit and income (tkr)', size=14)
 plt.grid()
+ax2 = ax1.twinx()
+plt.sca(ax2)
+ax2.set_ylabel('Reputation', size=14)
+plt.yticks(size=12)
 plt.show()
